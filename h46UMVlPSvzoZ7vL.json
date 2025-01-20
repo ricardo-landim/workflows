@@ -1,0 +1,811 @@
+{
+  "createdAt": "2025-01-20T15:45:40.460Z",
+  "updatedAt": "2025-01-20T16:55:05.726Z",
+  "id": "h46UMVlPSvzoZ7vL",
+  "name": "TRANSCRITOR - Whatsapp: Marco Bala",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "faccbd3d-33a3-4503-9a48-b3d1cc5a174e",
+              "leftValue": "={{$json[\"content\"].length}}",
+              "rightValue": 1750,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "abfa3aa1-c283-49fd-8554-8cafb386b8ef",
+      "name": "Faz o direcionamento de acordo com a contagem de caracteres1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2040,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {
+          "mimeType": "audio/mp3"
+        }
+      },
+      "id": "8146933e-eef2-422f-80a2-1f4c35e4d32f",
+      "name": "Convert to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f876e398-fb76-43fb-ae50-746536333ea5",
+              "name": "whatsapp",
+              "value": "={{ $json.whatsappDigitado }}",
+              "type": "string"
+            },
+            {
+              "id": "9999de39-cabe-4662-9e73-a1255c2b5eb4",
+              "name": "message_type",
+              "value": "={{ $('Webhook3').item.json.body.data.message.audioMessage }}",
+              "type": "string"
+            },
+            {
+              "id": "075b07bc-9863-4fa5-87a9-1993e3502962",
+              "name": "message.message_id",
+              "value": "={{ $json.body?.data?.key?.id || '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e4292690-b775-4811-98e4-3b8d5602172f",
+      "name": "normalizacao",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obter o valor de remoteJid dinamicamente do input do n8n\nconst remoteJid = $json[\"body\"][\"data\"][\"key\"][\"remoteJid\"]; // Acessa o valor do campo 'remoteJid' no JSON de entrada do Webhook\nlet whatsappDigitado = remoteJid.split('@')[0]; // Pega apenas a parte numérica antes de \"@s.whatsapp.net\"\n\n// Garantir que whatsappDigitado seja apenas números\nwhatsappDigitado = whatsappDigitado.replace(/\\D/g, '');\n\n// Verificar se o número começa com o código do país '55' e tem o formato correto\nif (whatsappDigitado.startsWith(\"55\")) {\n    // Extrair o DDD e o número local (após o código do país)\n    const ddd = whatsappDigitado.slice(2, 4); // Primeiro, extrai o DDD (2 dígitos após 55)\n    let numeroLocal = whatsappDigitado.slice(4); // Depois, pega o número local\n\n    // Se o número local tiver apenas 8 dígitos, adicionar o '9' antes do número local\n    if (numeroLocal.length === 8) {\n        numeroLocal = '9' + numeroLocal;\n    }\n\n    // Reconstruir o número completo\n    whatsappDigitado = `55${ddd}${numeroLocal}`;\n}\n\n// Retornar o número completo corrigido para o n8n (mantendo o código do país, DDD e número completo)\nreturn {\n    json: {\n        whatsappDigitado // Número no formato 55 + DDD + 9 + número local\n    }\n};"
+      },
+      "id": "848a13f1-055c-4258-9075-cac309661d2b",
+      "name": "Limpador",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        100,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.ricardolandim.com.br/message/sendText/marcos",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('normalizacao').item.json.whatsapp }}"
+            },
+            {
+              "name": "text",
+              "value": "=*Resumo do áudio:* \n> _\"{{ $item(\"0\").$node[\"Resumidor\"].json[\"text\"] }}\"_\n\n*PROJETO MARCO BALA*"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "id": "0c032b79-b6fc-4c6f-a9cb-1a52d9962eef",
+      "name": "Mensagem Resumida",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2840,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.ricardolandim.com.br/message/sendText/marcos",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('normalizacao').item.json.whatsapp }}"
+            },
+            {
+              "name": "text",
+              "value": "=*Transcrição:* \n> _{{ $item(\"0\").$node[\"Transcritor\"].json[\"text\"] }}_\n\n*PROJETO MARCO BALA*"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "id": "e29b7608-926c-4958-ad48-1464b24ef0fb",
+      "name": "Mensagem Transcrita",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2840,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/audio/transcriptions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "model",
+              "value": "whisper-large-v3-turbo"
+            },
+            {
+              "name": "temperature",
+              "value": "0.5"
+            },
+            {
+              "name": "response_format",
+              "value": "json"
+            },
+            {
+              "name": "language",
+              "value": "pt"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e9209675-0695-46c6-b922-dfe2a0728328",
+      "name": "Transcreve audio - Groq",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## NÓS PARA USO NO WHISPER\n### TRANSCRIBE - RESUMIDOR",
+        "height": 300,
+        "width": 770,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        580
+      ],
+      "id": "c7e37c86-36ac-4432-a103-6e01afa08874",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Resumidor com OPENAI\n### Envio no Whatsapp pela EvolutionAPI\n",
+        "height": 421.00993262519364,
+        "width": 680,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        0
+      ],
+      "id": "2de1f431-3f5d-4959-8ec4-ab9bdccfc9d2",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {},
+      "id": "a40e75d9-7a5a-42dd-92e6-114ba1ac819f",
+      "name": "Finalizar, pois não é áudio",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        600,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Transcrição do áudio\n### >> Decidir se vai Resumidor >>",
+        "height": 360,
+        "width": 920,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        960,
+        180
+      ],
+      "id": "f51fdef8-e908-48db-b20f-f389691310ca",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Nó de ativação e verificação do Fluxo\n### Verifica se é ou não é um áudio",
+        "height": 580,
+        "width": 800,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9b9f8ed8-aff8-403f-941c-9fd1e1a7584f",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Contador de caracteres\n### +1333 vai para Resumo\n",
+        "height": 360,
+        "width": 300,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        180
+      ],
+      "id": "f9848bff-732c-4d99-9f0b-1e8c90d810ef",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://audioapi:5000/transcrever",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "id": "491340a1-4d90-43a9-8dd2-82121a71dfec",
+      "name": "Transcreve audio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1620,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Transcritor com OPENAI\n### Envio no Whatsapp pela EvolutionAPI\n",
+        "height": 435.7574494688952,
+        "width": 680,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        440
+      ],
+      "id": "b0728eab-ab26-45a9-a53c-7df36bcf34c2",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "model": "gemma2-9b-it",
+        "options": {
+          "temperature": 0.5
+        }
+      },
+      "id": "eb72c3f7-51e6-4687-a6e4-f1633e38bc5d",
+      "name": "Groq RESUMO",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2520,
+        300
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "Asl2PTTcOO0X9N95",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gemma2-9b-it",
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "31fa4a06-9a30-4dd0-a064-d9811b266349",
+      "name": "Groq TRANSCREVER",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2520,
+        720
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "Asl2PTTcOO0X9N95",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Resuma o seguinte texto: \"{{ $('Conteúdo rranscrito').item.json.content }}\", garantindo que o contexto e a hierarquia das informações sejam preservados. O resumo deve ser claro, direto e prático, sintetizando as informações essenciais sem excluir detalhes importantes. A resposta deve começar com: \"O áudio descreve\" e conter apenas o resumo, sem qualquer introdução ou mensagem adicional."
+      },
+      "id": "2851c776-668f-4ae8-9e44-66c96bf9882f",
+      "name": "Resumidor",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        2480,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://evolution.ricardolandim.com.br/chat/getBase64FromMediaMessage/marcos",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "=d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"message\": {\n        \"key\": {\n            \"id\":  \"{{ $('Webhook3').item.json.body.data.key.id }}\"\n        }\n    },\n    \"convertToMp4\": true\n} ",
+        "options": {}
+      },
+      "id": "ea04c479-fad9-44a5-838a-51ff1ae37d54",
+      "name": "Captura áudio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "82cccc1e-3c1d-43fd-a4e9-7d2794cb23eb",
+              "name": "content",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "21c994dd-82d3-45df-b95e-b16c45d7b56c",
+      "name": "Conteúdo rranscrito",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dc6fc1aa-79c6-4427-89f4-3b4b0b751ef1",
+              "leftValue": "={{ $('Webhook3').item.json.body.data.messageType }}",
+              "rightValue": "audioMessage",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "40971e73-f808-4c47-9793-97d01be15285",
+      "name": "A msg é áudio?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        320,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "94746291-c0f3-44f3-b635-1fe696d7d74e",
+              "leftValue": "={{ $json.body.data.key.fromMe }}",
+              "rightValue": "false",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0c401906-964e-44ce-ab51-ea71384c128a",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        600,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Você recebeu a seguinte transcrição de um áudio:\n\n\"{{ $('Conteúdo rranscrito').item.json.content }}\"\n\nSua tarefa é revisar o texto, corrigindo eventuais erros gramaticais e ortográficos, acrescentando a pontuação adequada (pontos, vírgulas, etc.) e ajustando a fluidez, sempre mantendo o sentido original da mensagem.\n\nA resposta final deve conter somente a mensagem já corrigida e formatada, sem introduções, explicações ou comentários adicionais. Não coloque coisas como: \"Aqui está a mensagem formatada e humanizada.\"\n\nDeixe a mensagem no ponto de entender."
+      },
+      "id": "419a5de7-100f-4850-8259-1c7b0499df50",
+      "name": "Transcritor",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        2500,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "8a518d36-1ecd-4cf3-9b85-1f1c53ae5e06",
+      "name": "OpenAI Transcribe",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.4,
+      "position": [
+        1120,
+        680
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "b4auJTU9Z1864AOH",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "transcritor-marcos",
+        "options": {}
+      },
+      "id": "ecd31f45-aa02-4f28-9ed1-158ab4dc32c4",
+      "name": "Webhook3",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        100,
+        140
+      ],
+      "webhookId": "bbb6bc1b-c429-4912-9ffd-7386fe4168e5"
+    },
+    {
+      "parameters": {
+        "content": "```\n    ██████╗ ██████╗  ██████╗      ██╗███████╗████████╗ ██████╗     ███╗   ███╗ █████╗ ██████╗  ██████╗ ██████╗     ██████╗  █████╗ ██╗      █████╗ \n    ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝╚══██╔══╝██╔═══██╗    ████╗ ████║██╔══██╗██╔══██╗██╔════╝██╔═══██╗    ██╔══██╗██╔══██╗██║     ██╔══██╗\n    ██████╔╝██████╔╝██║   ██║     ██║█████╗     ██║   ██║   ██║    ██╔████╔██║███████║██████╔╝██║     ██║   ██║    ██████╔╝███████║██║     ███████║\n    ██╔═══╝ ██╔══██╗██║   ██║██   ██║██╔══╝     ██║   ██║   ██║    ██║╚██╔╝██║██╔══██║██╔══██╗██║     ██║   ██║    ██╔══██╗██╔══██║██║     ██╔══██║\n    ██║     ██║  ██║╚██████╔╝╚█████╔╝███████╗   ██║   ╚██████╔╝    ██║ ╚═╝ ██║██║  ██║██║  ██║╚██████╗╚██████╔╝    ██████╔╝██║  ██║███████╗██║  ██║\n    ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚══════╝   ╚═╝    ╚═════╝     ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝     ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝\n                                                                                                                                                   \n```",
+        "width": 1520
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        820,
+        0
+      ],
+      "id": "a9fdd57e-08d4-4ead-b214-0a9706390149",
+      "name": "Sticky Note5"
+    }
+  ],
+  "connections": {
+    "Faz o direcionamento de acordo com a contagem de caracteres1": {
+      "main": [
+        [
+          {
+            "node": "Resumidor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Transcritor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Transcreve audio - Groq",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "normalizacao": {
+      "main": [
+        [
+          {
+            "node": "A msg é áudio?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpador": {
+      "main": [
+        [
+          {
+            "node": "normalizacao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resumidor": {
+      "main": [
+        [
+          {
+            "node": "Mensagem Resumida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq TRANSCREVER": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Transcritor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq RESUMO": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Resumidor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Captura áudio": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conteúdo rranscrito": {
+      "main": [
+        [
+          {
+            "node": "Faz o direcionamento de acordo com a contagem de caracteres1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "A msg é áudio?": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finalizar, pois não é áudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Captura áudio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finalizar, pois não é áudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcritor": {
+      "main": [
+        [
+          {
+            "node": "Mensagem Transcrita",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcreve audio - Groq": {
+      "main": [
+        [
+          {
+            "node": "Conteúdo rranscrito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook3": {
+      "main": [
+        [
+          {
+            "node": "Limpador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "b6e17746-4231-476b-9657-c7f384b6286b",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2025-01-20T15:45:26.292Z",
+      "updatedAt": "2025-01-20T15:45:26.292Z",
+      "id": "e6G90M2ptSbZs2mC",
+      "name": "Whatsapp"
+    },
+    {
+      "createdAt": "2025-01-20T15:24:06.076Z",
+      "updatedAt": "2025-01-20T15:24:06.076Z",
+      "id": "Eicfvnyw0KgZUadX",
+      "name": "™"
+    }
+  ]
+}
