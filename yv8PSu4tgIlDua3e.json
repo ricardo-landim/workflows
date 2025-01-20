@@ -1,0 +1,2370 @@
+{
+  "createdAt": "2025-01-20T19:02:31.377Z",
+  "updatedAt": "2025-01-20T19:03:05.039Z",
+  "id": "yv8PSu4tgIlDua3e",
+  "name": "RESUMIDOR PRO -  Whatsapp",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bc3489e3-1733-4679-b83b-708820a6431b",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1820,
+        740
+      ],
+      "id": "10b08005-ef50-4e78-b949-79070d77c341",
+      "name": "Webhook",
+      "webhookId": "bc3489e3-1733-4679-b83b-708820a6431b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ad7e3078-6fe3-40cb-b82b-4417beb93aea",
+              "name": "Grupo 01 Certo",
+              "value": "120363314229651317@g.us",
+              "type": "string"
+            },
+            {
+              "id": "a7aa7a02-3a16-4128-a35f-87be56e7adbd",
+              "name": "Grupo 02 Certo",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "a4e54bb0-6697-4f83-9e37-8937806e336c",
+              "name": "Grupo 03 Certo",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "450a265d-c325-49b4-96e6-e39721f82c48",
+              "name": "Grupo Recebido",
+              "value": "={{ $json.body.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "7ea6872d-7fa9-49ac-b1ab-f3c14e94bb14",
+              "name": "Mensagem",
+              "value": "={{ $json.body.data.message.conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "722e2251-7328-41d3-a75f-11aa8554acc9",
+              "name": "Nome",
+              "value": "={{ $json.body.data.pushName }}",
+              "type": "string"
+            },
+            {
+              "id": "91ec7b09-b97d-4718-92e5-dee3a695ecf7",
+              "name": "Horário",
+              "value": "={{ $json.body.date_time }}",
+              "type": "string"
+            },
+            {
+              "id": "7b31d367-b881-4826-babe-cf71834b0b1c",
+              "name": "Mensagem  Respondida",
+              "value": "={{ $json.body.data.contextInfo.quotedMessage.conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "ad9af313-4adc-4076-ab5c-13ee7297f277",
+              "name": "Caption",
+              "value": "={{ $json.body.data.message.imageMessage.caption }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1580,
+        740
+      ],
+      "id": "998a0217-d3b8-4762-9fe4-f46cc192f578",
+      "name": "Organizar"
+    },
+    {
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "summarizationMethod": "stuff",
+              "prompt": "=faça um resumo completo Diário do que foi conversado em  \"{{ \n  $json.mensagem.replace(/[\\{\\}\\[\\]\"]/g, '') \n               .replace(/\\n/g, ' ') \n               .replace(/\\r/g, ' ') \n               .replace(/\\\\/g, '\\\\\\\\')\n               .trim()\n}}\"\nhoje é {{ $now }}\n\nsua inspiração será esse formato de resumo, lembre-se que é um diário, nesse formato abaixo está como diário. Quero apenas o resumo, não diga mais nada fora desse modelo abaixo. Faça algo independente do número de mensagens captadas, mínimo de 500 caracteres, porém cite todos os temas abordados no grupo durante o dia. Quero tambem que adicione um \"#mais\" logo após o título, não use markdown:\n\nResumo do Dia no Grupo R.D-MA 📝 - 06/01\n#mais\n\n1. Top 5 Participantes Ativos 🏆\n• Kelvin Vieira - 4 mensagens\n• Fabio Machia - 3 mensagens\n• Frankyston Nogueira - 2 mensagens\n• Outros - 1 mensagem cada\n\n2. Horários de Maior Movimento ⏰\n• Manhã (08:00-12:00) - 7 mensagens\n• Tarde (14:00-18:00) - 5 mensagens\n• Noite (20:00-23:00) - 3 mensagens\n\n3. Discussões Principais 📌\t\nA. Problemas com o Agente de IA - 00h40\n• Participantes: 👨‍💻, Kelvin Vieira, Fabio Machia, Frankyston Nogueira e outros\n• Resumo: A discussão iniciou-se com a apresentação de um diagrama detalhando a estrutura de rede e os prompts utilizados pelo agente de IA. Foi identificado que o agente não estava respondendo adequadamente às instruções, possivelmente devido a falhas na transmissão de conteúdo ou formatação incorreta das credenciais. Os participantes sugeriram revisar as chaves de API, ajustar o fluxo de dados e reconfigurar os prompts para melhorar a resposta do agente.\n\nB. Instalação do Minio para Armazenamento - 07h02\n• Participantes: Kelvin Vieira e outros\n• Resumo: Kelvin relatou dificuldades na configuração do Minio para o envio de imagens no Chatwoot. Ele conseguiu uma solução temporária armazenando as imagens localmente, mas busca uma configuração mais estável e integrada. Foram discutidos problemas de credenciais e permissões, com sugestões de comandos específicos e compartilhamento de documentação para auxiliar na resolução.\n\nC. Agendamento sem Calendários - 08h30\n• Participantes: Fabio Machia e demais membros\n• Resumo: Fabio propôs a criação de um sistema de agendamento baseado em IA que não dependa de calendários tradicionais. A conversa abordou o uso de ferramentas de automação como o n8n, a personalização de templates e a implementação de notificações. Os membros exploraram a possibilidade de criar fluxos flexíveis que permitam aos usuários agendar compromissos de maneira intuitiva e independente de serviços externos.\n\nD. Transcrição de Áudio - 11h30\n• Participantes: Frankyston Nogueira, Kelvin Vieira, Fabio Machia e outros\n• Resumo: Frankyston questionou sobre métodos eficientes para inserir transcrições de áudio em fluxos de mensagens. Foram sugeridas soluções utilizando groq para processar arquivos de áudio e integrar com sistemas de IA e LLM. Os participantes compartilharam experiências sobre configuração no n8n e make, discutindo a qualidade das transcrições e maneiras de otimizar o desempenho para melhorar a experiência do usuário.\n\n4. Outros Temas Relevantes 📋\n• Erro no Supabase: Bernardo pediu ajuda para resolver um erro 404 no Supabase.\n• Reinstalação Pendente: Macrina mencionou dificuldades com uma reinstalação que permanecia pendente.\n• Remoção de Estrutura em File Search: Sérgio e Raphael Lanfredi discutiram como remover uma estrutura específica em resultados de busca de arquivos usando um node code.\n\n5. Eventos Especiais 🎯:\n• 2 eventos especiais registrado hoje.\n\n6. Links Compartilhados 🔗:\n• Links compartilhados hoje.\n\n7.\tClima do Grupo 🌟:\n• O ambiente foi colaborativo e dinâmico, com membros engajados em resolver problemas técnicos e compartilhar conhecimentos. Houve uma disposição geral para ajudar e trocar experiências, fortalecendo o espírito de comunidade e cooperação.\n\n8. Resumo geral do dia 📊:\n• O dia foi intensamente focado em resolver desafios técnicos relacionados a agentes de IA, armazenamento com Minio, sistemas de agendamento inteligentes e transcrição de áudio. A participação ativa dos membros resultou em diversas soluções práticas e sugestões valiosas, demonstrando um forte comprometimento com a melhoria contínua dos projetos em andamento.\n\n9. Observações Finais 💭:\n• A interação constante e a troca de conhecimentos destacaram-se como pontos fortes do grupo, facilitando a superação de obstáculos técnicos e promovendo a inovação nas abordagens adotadas. A colaboração entre os membros reforça a eficácia do grupo em alcançar objetivos comuns e avançar nas implementações tecnológicas.\n"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2,
+      "position": [
+        600,
+        -20
+      ],
+      "id": "c91dc68a-c0a6-4c2a-81e8-18f3f5c8e542",
+      "name": "Resumo"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        260,
+        -20
+      ],
+      "id": "79e0398d-1510-4c5e-807d-9244b629f33e",
+      "name": "Agregar"
+    },
+    {
+      "parameters": {
+        "content": "## Capturar todas as mensagens do grupo certo e subir",
+        "height": 820,
+        "width": 1100,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1880,
+        420
+      ],
+      "typeVersion": 1,
+      "id": "39e19b35-81bd-401a-9218-991fa46c3847",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Toda noite às 10pm ativa, captura todas as conversas armazenadas e agrega todas informações.",
+        "height": 820,
+        "width": 720,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -760,
+        420
+      ],
+      "typeVersion": 1,
+      "id": "85290fb0-908e-40ec-9238-0ebe0a6148b8",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Faz o resumo com IA e faz o envio no meu privado e no grupo, de tudo que foi conversado naquele dia.",
+        "height": 480,
+        "width": 1560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -20,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "e8b2fb85-8c9e-4d92-a554-9829eff2fb7c",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "630a8e05-c5a1-4ae4-a8a0-1f15720f1fcf",
+              "name": "replace",
+              "value": "={{ (() => { \n    const texto = $json.Texto; // Captura o texto do campo \"Texto\"\n    return texto.replace(/#mais/g, '\\u200b'.repeat(7000)); // Substitui \"#mais\" por 1000 caracteres invisíveis\n})() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1080,
+        -20
+      ],
+      "id": "81a9cc29-b092-4da7-9913-549d73406ed0",
+      "name": "Replace"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b3ff71a2-8cb9-4ab9-a2c2-5ac7b58cbfa5",
+              "name": "Texto",
+              "value": "={{ $json.response.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        920,
+        -20
+      ],
+      "id": "0751dd66-8d45-4198-b9dd-3e4f314a2f01",
+      "name": "Texto"
+    },
+    {
+      "parameters": {
+        "jsCode": "return (() => {\n  try {\n    // Obtém os dados\n    let dados = $json.data;\n\n    // Se os dados não forem um array, tente normalizar\n    if (!Array.isArray(dados)) {\n      if (dados && typeof dados === 'object') {\n        // Se for um objeto único, coloca dentro de um array\n        dados = [dados];\n      } else {\n        // Caso contrário, retorna um erro\n        return [{ mensagem: \"Erro: Os dados fornecidos não são válidos para processamento.\" }];\n      }\n    }\n\n    // Processa os dados agora normalizados\n    const resumo = dados.map(item => {\n      // Validações para campos individuais\n      const nomeValido = typeof item.Nome === 'string' ? item.Nome.trim() : null;\n      const isNomeInvalido = !nomeValido || nomeValido === \"?\" || nomeValido.toLowerCase() === \"desconhecido\";\n      const nomeUsuario = isNomeInvalido ? \"Usuário não identificado\" : nomeValido;\n\n      const mensagemRespondida = item[\"Mensagem respondida\"]\n        ? `Mensagem Respondida: ${item[\"Mensagem respondida\"]}`\n        : \"Mensagem Respondida: Nenhuma\";\n\n      return `Nome: ${nomeUsuario}, Mensagem: ${item.Mensagem || \"Mensagem não disponível\"}, ${mensagemRespondida}, Horário: ${item.Horário || \"Horário não informado\"}`;\n    }).join('\\n');\n\n    return [{ mensagem: resumo }];\n  } catch (error) {\n    return [{ mensagem: `Erro ao processar as mensagens: ${error.message}` }];\n  }\n})();\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        -20
+      ],
+      "id": "18b36349-ae67-440c-9e96-17f520365f8a",
+      "name": "Texto Único"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        680,
+        160
+      ],
+      "id": "4c813961-c1d5-415c-92bc-0f730e474d85",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "b4auJTU9Z1864AOH",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "```\n    ██████╗ ███████╗███████╗██╗   ██╗███╗   ███╗██╗██████╗  ██████╗ ██████╗     ██████╗ ██████╗  ██████╗ \n    ██╔══██╗██╔════╝██╔════╝██║   ██║████╗ ████║██║██╔══██╗██╔═══██╗██╔══██╗    ██╔══██╗██╔══██╗██╔═══██╗\n    ██████╔╝█████╗  ███████╗██║   ██║██╔████╔██║██║██║  ██║██║   ██║██████╔╝    ██████╔╝██████╔╝██║   ██║\n    ██╔══██╗██╔══╝  ╚════██║██║   ██║██║╚██╔╝██║██║██║  ██║██║   ██║██╔══██╗    ██╔═══╝ ██╔══██╗██║   ██║\n    ██║  ██║███████╗███████║╚██████╔╝██║ ╚═╝ ██║██║██████╔╝╚██████╔╝██║  ██║    ██║     ██║  ██║╚██████╔╝\n    ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝ \n                                                                                                         \n```",
+        "width": 1100,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1880,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "aab0bbcd-1f0f-49bb-bda3-2b57c12bd77e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "resource": "groups-api",
+        "operation": "fetch-groups",
+        "instanceName": "ricardo",
+        "searchMethod": "fetchAll",
+        "getParticipants": true
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        -1580,
+        540
+      ],
+      "id": "2c9b696a-1d1e-4b96-a5e8-60f5dfeb954e",
+      "name": "achar grupo",
+      "credentials": {
+        "evolutionApi": {
+          "id": "Fgt70wh5ojQXEIkf",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "11i1FjCiVU1glUxIrIC7LHcx2Z-MW6xPcMLDRHSfil54",
+          "mode": "list",
+          "cachedResultName": "RESUMIDOR PRO - GRUPO 02 - RICARDO",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11i1FjCiVU1glUxIrIC7LHcx2Z-MW6xPcMLDRHSfil54/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11i1FjCiVU1glUxIrIC7LHcx2Z-MW6xPcMLDRHSfil54/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome": "={{ $json.Nome }}",
+            "Mensagem": "={{ $json.Mensagem }}",
+            "Horário": "={{ $json['Horário'] }}",
+            "Mensagem respondida": "={{ $json['Mensagem  Respondida'] }}",
+            "Data": "={{ new Date().toLocaleDateString(\"pt-BR\", { day: '2-digit', month: '2-digit', year: 'numeric' }) }}",
+            "Legenda": "={{ $json.Caption }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem",
+              "displayName": "Mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem respondida",
+              "displayName": "Mensagem respondida",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Legenda",
+              "displayName": "Legenda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Horário",
+              "displayName": "Horário",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -1100,
+        660
+      ],
+      "id": "bc17b403-65da-4de1-a37a-e39c525d7d41",
+      "name": "Salvar Conversas - Grupo 02",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g7SnwdIuneJwIUag",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1feot9Rg5fZPt0IO18AYVfOaT8fwyLOJuPdu3J_VZSP0",
+          "mode": "list",
+          "cachedResultName": "Resumo Grupos - V0.4 - RICARDO LANDIM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1feot9Rg5fZPt0IO18AYVfOaT8fwyLOJuPdu3J_VZSP0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1feot9Rg5fZPt0IO18AYVfOaT8fwyLOJuPdu3J_VZSP0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome": "={{ $json.Nome }}",
+            "Mensagem": "={{ $json.Mensagem }}",
+            "Horário": "={{ $json['Horário'] }}",
+            "Mensagem respondida": "={{ $json['Mensagem  Respondida'] }}",
+            "Data": "={{ new Date().toLocaleDateString(\"pt-BR\", { day: '2-digit', month: '2-digit', year: 'numeric' }) }}",
+            "Legenda": "={{ $json.Caption }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem",
+              "displayName": "Mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem respondida",
+              "displayName": "Mensagem respondida",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Legenda",
+              "displayName": "Legenda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Horário",
+              "displayName": "Horário",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -1100,
+        480
+      ],
+      "id": "e14029b0-8005-4e39-b5c5-9e48461b5332",
+      "name": "Salvar Conversas - Grupo 01",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g7SnwdIuneJwIUag",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1eM3T5rV4FpwJVcphny2III5Ha4ZL0ab6wjzfmciTK5g",
+          "mode": "list",
+          "cachedResultName": "RESUMIDOR PRO - GRUPO 03 - RICARDO",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eM3T5rV4FpwJVcphny2III5Ha4ZL0ab6wjzfmciTK5g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eM3T5rV4FpwJVcphny2III5Ha4ZL0ab6wjzfmciTK5g/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome": "={{ $json.Nome }}",
+            "Mensagem": "={{ $json.Mensagem }}",
+            "Horário": "={{ $json['Horário'] }}",
+            "Mensagem respondida": "={{ $json['Mensagem  Respondida'] }}",
+            "Data": "={{ new Date().toLocaleDateString(\"pt-BR\", { day: '2-digit', month: '2-digit', year: 'numeric' }) }}",
+            "Legenda": "={{ $json.Caption }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem",
+              "displayName": "Mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem respondida",
+              "displayName": "Mensagem respondida",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Legenda",
+              "displayName": "Legenda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Horário",
+              "displayName": "Horário",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -1100,
+        840
+      ],
+      "id": "e1570559-3d25-47e7-8d93-7a2cb5d25c6d",
+      "name": "Salvar Conversas - Grupo 03",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g7SnwdIuneJwIUag",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json['Grupo 01 Certo'] }}",
+                    "rightValue": "={{ $json['Grupo Recebido'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Grupo 01"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5ee04acc-f6e0-4a19-8a08-22fc8ca199a7",
+                    "leftValue": "={{ $json['Grupo 02 Certo'] }}",
+                    "rightValue": "={{ $json['Grupo Recebido'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Grupo 02"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "290af344-f812-4628-95a3-4b1d84894289",
+                    "leftValue": "={{ $json['Grupo 03 Certo'] }}",
+                    "rightValue": "={{ $json['Grupo Recebido'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Grupo 03"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6a5ea985-c4b8-40cb-ab72-0334a73ef14c",
+                    "leftValue": "={{ $json['Grupo 04 Certo'] }}",
+                    "rightValue": "={{ $json['Grupo Recebido'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Grupo 04"
+            }
+          ]
+        },
+        "options": {
+          "allMatchingOutputs": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -340,
+        760
+      ],
+      "id": "dc1e906c-a3e2-4459-9714-d9d86e59a7b5",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1feot9Rg5fZPt0IO18AYVfOaT8fwyLOJuPdu3J_VZSP0",
+          "mode": "list",
+          "cachedResultName": "Resumo Grupos - V0.4 - RICARDO LANDIM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1feot9Rg5fZPt0IO18AYVfOaT8fwyLOJuPdu3J_VZSP0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1feot9Rg5fZPt0IO18AYVfOaT8fwyLOJuPdu3J_VZSP0/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Data",
+              "lookupValue": "={{ new Date().toLocaleDateString(\"pt-BR\", { day: '2-digit', month: '2-digit', year: 'numeric' }) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        60,
+        -20
+      ],
+      "id": "b1b2b18c-4395-453a-ae18-36633000639b",
+      "name": "Consulta as conversas + filtro - Grupo 01",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g7SnwdIuneJwIUag",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "11i1FjCiVU1glUxIrIC7LHcx2Z-MW6xPcMLDRHSfil54",
+          "mode": "list",
+          "cachedResultName": "RESUMIDOR PRO - GRUPO 02 - RICARDO",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11i1FjCiVU1glUxIrIC7LHcx2Z-MW6xPcMLDRHSfil54/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11i1FjCiVU1glUxIrIC7LHcx2Z-MW6xPcMLDRHSfil54/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Data",
+              "lookupValue": "={{ new Date().toLocaleDateString(\"pt-BR\", { day: '2-digit', month: '2-digit', year: 'numeric' }) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        60,
+        500
+      ],
+      "id": "0c8ec46d-8114-4b36-86f3-3110fb99659c",
+      "name": "Consulta as conversas + filtro - Grupo 02",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g7SnwdIuneJwIUag",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1eM3T5rV4FpwJVcphny2III5Ha4ZL0ab6wjzfmciTK5g",
+          "mode": "list",
+          "cachedResultName": "RESUMIDOR PRO - GRUPO 03 - RICARDO",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eM3T5rV4FpwJVcphny2III5Ha4ZL0ab6wjzfmciTK5g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eM3T5rV4FpwJVcphny2III5Ha4ZL0ab6wjzfmciTK5g/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Data",
+              "lookupValue": "={{ new Date().toLocaleDateString(\"pt-BR\", { day: '2-digit', month: '2-digit', year: 'numeric' }) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        60,
+        1020
+      ],
+      "id": "3d191fb1-82aa-45b1-84cb-71455eda4780",
+      "name": "Consulta as conversas + filtro - Grupo 03",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g7SnwdIuneJwIUag",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "summarizationMethod": "stuff",
+              "prompt": "=faça um resumo completo Diário do que foi conversado em  \"{{ \n  $json.mensagem.replace(/[\\{\\}\\[\\]\"]/g, '') \n               .replace(/\\n/g, ' ') \n               .replace(/\\r/g, ' ') \n               .replace(/\\\\/g, '\\\\\\\\')\n               .trim()\n}}\"\nhoje é {{ $now }}\n\nsua inspiração será esse formato de resumo, lembre-se que é um diário, nesse formato abaixo está como diário. Quero apenas o resumo, não diga mais nada fora desse modelo abaixo. Faça algo independente do número de mensagens captadas, mínimo de 500 caracteres, porém cite todos os temas abordados no grupo durante o dia. Quero tambem que adicione um \"#mais\" logo após o título, não use markdown:\n\nResumo do Dia no Grupo R.D-MA 📝 - 06/01\n#mais\n\n1. Top 5 Participantes Ativos 🏆\n• Kelvin Vieira - 4 mensagens\n• Fabio Machia - 3 mensagens\n• Frankyston Nogueira - 2 mensagens\n• Outros - 1 mensagem cada\n\n2. Horários de Maior Movimento ⏰\n• Manhã (08:00-12:00) - 7 mensagens\n• Tarde (14:00-18:00) - 5 mensagens\n• Noite (20:00-23:00) - 3 mensagens\n\n3. Discussões Principais 📌\t\nA. Problemas com o Agente de IA - 00h40\n• Participantes: 👨‍💻, Kelvin Vieira, Fabio Machia, Frankyston Nogueira e outros\n• Resumo: A discussão iniciou-se com a apresentação de um diagrama detalhando a estrutura de rede e os prompts utilizados pelo agente de IA. Foi identificado que o agente não estava respondendo adequadamente às instruções, possivelmente devido a falhas na transmissão de conteúdo ou formatação incorreta das credenciais. Os participantes sugeriram revisar as chaves de API, ajustar o fluxo de dados e reconfigurar os prompts para melhorar a resposta do agente.\n\nB. Instalação do Minio para Armazenamento - 07h02\n• Participantes: Kelvin Vieira e outros\n• Resumo: Kelvin relatou dificuldades na configuração do Minio para o envio de imagens no Chatwoot. Ele conseguiu uma solução temporária armazenando as imagens localmente, mas busca uma configuração mais estável e integrada. Foram discutidos problemas de credenciais e permissões, com sugestões de comandos específicos e compartilhamento de documentação para auxiliar na resolução.\n\nC. Agendamento sem Calendários - 08h30\n• Participantes: Fabio Machia e demais membros\n• Resumo: Fabio propôs a criação de um sistema de agendamento baseado em IA que não dependa de calendários tradicionais. A conversa abordou o uso de ferramentas de automação como o n8n, a personalização de templates e a implementação de notificações. Os membros exploraram a possibilidade de criar fluxos flexíveis que permitam aos usuários agendar compromissos de maneira intuitiva e independente de serviços externos.\n\nD. Transcrição de Áudio - 11h30\n• Participantes: Frankyston Nogueira, Kelvin Vieira, Fabio Machia e outros\n• Resumo: Frankyston questionou sobre métodos eficientes para inserir transcrições de áudio em fluxos de mensagens. Foram sugeridas soluções utilizando groq para processar arquivos de áudio e integrar com sistemas de IA e LLM. Os participantes compartilharam experiências sobre configuração no n8n e make, discutindo a qualidade das transcrições e maneiras de otimizar o desempenho para melhorar a experiência do usuário.\n\n4. Outros Temas Relevantes 📋\n• Erro no Supabase: Bernardo pediu ajuda para resolver um erro 404 no Supabase.\n• Reinstalação Pendente: Macrina mencionou dificuldades com uma reinstalação que permanecia pendente.\n• Remoção de Estrutura em File Search: Sérgio e Raphael Lanfredi discutiram como remover uma estrutura específica em resultados de busca de arquivos usando um node code.\n\n5. Eventos Especiais 🎯:\n• 2 eventos especiais registrado hoje.\n\n6. Links Compartilhados 🔗:\n• Links compartilhados hoje.\n\n7.\tClima do Grupo 🌟:\n• O ambiente foi colaborativo e dinâmico, com membros engajados em resolver problemas técnicos e compartilhar conhecimentos. Houve uma disposição geral para ajudar e trocar experiências, fortalecendo o espírito de comunidade e cooperação.\n\n8. Resumo geral do dia 📊:\n• O dia foi intensamente focado em resolver desafios técnicos relacionados a agentes de IA, armazenamento com Minio, sistemas de agendamento inteligentes e transcrição de áudio. A participação ativa dos membros resultou em diversas soluções práticas e sugestões valiosas, demonstrando um forte comprometimento com a melhoria contínua dos projetos em andamento.\n\n9. Observações Finais 💭:\n• A interação constante e a troca de conhecimentos destacaram-se como pontos fortes do grupo, facilitando a superação de obstáculos técnicos e promovendo a inovação nas abordagens adotadas. A colaboração entre os membros reforça a eficácia do grupo em alcançar objetivos comuns e avançar nas implementações tecnológicas."
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2,
+      "position": [
+        600,
+        500
+      ],
+      "id": "8498fdf1-71d6-4660-b3d9-46bdc35880a6",
+      "name": "Resumo1"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        260,
+        500
+      ],
+      "id": "ac8bc626-8ca6-40ff-b452-56d4d3d47cfa",
+      "name": "Agregar1"
+    },
+    {
+      "parameters": {
+        "content": "## Faz o resumo com IA e faz o envio no meu privado e no grupo, de tudo que foi conversado naquele dia.",
+        "height": 500,
+        "width": 1560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -20,
+        340
+      ],
+      "typeVersion": 1,
+      "id": "11a14516-70b7-4dbb-a907-7602bf02501e",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "630a8e05-c5a1-4ae4-a8a0-1f15720f1fcf",
+              "name": "replace",
+              "value": "={{ (() => { \n    const texto = $json.Texto; // Captura o texto do campo \"Texto\"\n    return texto.replace(/#mais/g, '\\u200b'.repeat(7000)); // Substitui \"#mais\" por 1000 caracteres invisíveis\n})() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1080,
+        500
+      ],
+      "id": "07d527e1-58fa-43b3-8459-56c09f823b82",
+      "name": "Replace1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b3ff71a2-8cb9-4ab9-a2c2-5ac7b58cbfa5",
+              "name": "Texto",
+              "value": "={{ $json.response.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        920,
+        500
+      ],
+      "id": "1588a0ac-2408-4bcd-a69d-bea184219cb4",
+      "name": "Texto1"
+    },
+    {
+      "parameters": {
+        "jsCode": "return (() => {\n  try {\n    // Obtém os dados\n    let dados = $json.data;\n\n    // Se os dados não forem um array, tente normalizar\n    if (!Array.isArray(dados)) {\n      if (dados && typeof dados === 'object') {\n        // Se for um objeto único, coloca dentro de um array\n        dados = [dados];\n      } else {\n        // Caso contrário, retorna um erro\n        return [{ mensagem: \"Erro: Os dados fornecidos não são válidos para processamento.\" }];\n      }\n    }\n\n    // Processa os dados agora normalizados\n    const resumo = dados.map(item => {\n      // Validações para campos individuais\n      const nomeValido = typeof item.Nome === 'string' ? item.Nome.trim() : null;\n      const isNomeInvalido = !nomeValido || nomeValido === \"?\" || nomeValido.toLowerCase() === \"desconhecido\";\n      const nomeUsuario = isNomeInvalido ? \"Usuário não identificado\" : nomeValido;\n\n      const mensagemRespondida = item[\"Mensagem respondida\"]\n        ? `Mensagem Respondida: ${item[\"Mensagem respondida\"]}`\n        : \"Mensagem Respondida: Nenhuma\";\n\n      return `Nome: ${nomeUsuario}, Mensagem: ${item.Mensagem || \"Mensagem não disponível\"}, ${mensagemRespondida}, Horário: ${item.Horário || \"Horário não informado\"}`;\n    }).join('\\n');\n\n    return [{ mensagem: resumo }];\n  } catch (error) {\n    return [{ mensagem: `Erro ao processar as mensagens: ${error.message}` }];\n  }\n})();\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        500
+      ],
+      "id": "1b4b1821-bded-48ea-a0b6-35550cb1e1d3",
+      "name": "Texto Único1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        700,
+        680
+      ],
+      "id": "1aef0539-b354-4c35-8e8d-4e001e4edba5",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "b4auJTU9Z1864AOH",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "summarizationMethod": "stuff",
+              "prompt": "=faça um resumo completo Diário do que foi conversado em  \"{{ \n  $json.mensagem.replace(/[\\{\\}\\[\\]\"]/g, '') \n               .replace(/\\n/g, ' ') \n               .replace(/\\r/g, ' ') \n               .replace(/\\\\/g, '\\\\\\\\')\n               .trim()\n}}\"\nhoje é {{ $now }}\n\nsua inspiração será esse formato de resumo, lembre-se que é um diário, nesse formato abaixo está como diário. Quero apenas o resumo, não diga mais nada fora desse modelo abaixo. Faça algo independente do número de mensagens captadas, mínimo de 500 caracteres, porém cite todos os temas abordados no grupo durante o dia. Quero tambem que adicione um \"#mais\" logo após o título, não use markdown:\n\nResumo do Dia no Grupo R.D-MA 📝 - 06/01\n#mais\n\n1. Top 5 Participantes Ativos 🏆\n• Kelvin Vieira - 4 mensagens\n• Fabio Machia - 3 mensagens\n• Frankyston Nogueira - 2 mensagens\n• Outros - 1 mensagem cada\n\n2. Horários de Maior Movimento ⏰\n• Manhã (08:00-12:00) - 7 mensagens\n• Tarde (14:00-18:00) - 5 mensagens\n• Noite (20:00-23:00) - 3 mensagens\n\n3. Discussões Principais 📌\t\nA. Problemas com o Agente de IA - 00h40\n• Participantes: 👨‍💻, Kelvin Vieira, Fabio Machia, Frankyston Nogueira e outros\n• Resumo: A discussão iniciou-se com a apresentação de um diagrama detalhando a estrutura de rede e os prompts utilizados pelo agente de IA. Foi identificado que o agente não estava respondendo adequadamente às instruções, possivelmente devido a falhas na transmissão de conteúdo ou formatação incorreta das credenciais. Os participantes sugeriram revisar as chaves de API, ajustar o fluxo de dados e reconfigurar os prompts para melhorar a resposta do agente.\n\nB. Instalação do Minio para Armazenamento - 07h02\n• Participantes: Kelvin Vieira e outros\n• Resumo: Kelvin relatou dificuldades na configuração do Minio para o envio de imagens no Chatwoot. Ele conseguiu uma solução temporária armazenando as imagens localmente, mas busca uma configuração mais estável e integrada. Foram discutidos problemas de credenciais e permissões, com sugestões de comandos específicos e compartilhamento de documentação para auxiliar na resolução.\n\nC. Agendamento sem Calendários - 08h30\n• Participantes: Fabio Machia e demais membros\n• Resumo: Fabio propôs a criação de um sistema de agendamento baseado em IA que não dependa de calendários tradicionais. A conversa abordou o uso de ferramentas de automação como o n8n, a personalização de templates e a implementação de notificações. Os membros exploraram a possibilidade de criar fluxos flexíveis que permitam aos usuários agendar compromissos de maneira intuitiva e independente de serviços externos.\n\nD. Transcrição de Áudio - 11h30\n• Participantes: Frankyston Nogueira, Kelvin Vieira, Fabio Machia e outros\n• Resumo: Frankyston questionou sobre métodos eficientes para inserir transcrições de áudio em fluxos de mensagens. Foram sugeridas soluções utilizando groq para processar arquivos de áudio e integrar com sistemas de IA e LLM. Os participantes compartilharam experiências sobre configuração no n8n e make, discutindo a qualidade das transcrições e maneiras de otimizar o desempenho para melhorar a experiência do usuário.\n\n4. Outros Temas Relevantes 📋\n• Erro no Supabase: Bernardo pediu ajuda para resolver um erro 404 no Supabase.\n• Reinstalação Pendente: Macrina mencionou dificuldades com uma reinstalação que permanecia pendente.\n• Remoção de Estrutura em File Search: Sérgio e Raphael Lanfredi discutiram como remover uma estrutura específica em resultados de busca de arquivos usando um node code.\n\n5. Eventos Especiais 🎯:\n• 2 eventos especiais registrado hoje.\n\n6. Links Compartilhados 🔗:\n• Links compartilhados hoje.\n\n7.\tClima do Grupo 🌟:\n• O ambiente foi colaborativo e dinâmico, com membros engajados em resolver problemas técnicos e compartilhar conhecimentos. Houve uma disposição geral para ajudar e trocar experiências, fortalecendo o espírito de comunidade e cooperação.\n\n8. Resumo geral do dia 📊:\n• O dia foi intensamente focado em resolver desafios técnicos relacionados a agentes de IA, armazenamento com Minio, sistemas de agendamento inteligentes e transcrição de áudio. A participação ativa dos membros resultou em diversas soluções práticas e sugestões valiosas, demonstrando um forte comprometimento com a melhoria contínua dos projetos em andamento.\n\n9. Observações Finais 💭:\n• A interação constante e a troca de conhecimentos destacaram-se como pontos fortes do grupo, facilitando a superação de obstáculos técnicos e promovendo a inovação nas abordagens adotadas. A colaboração entre os membros reforça a eficácia do grupo em alcançar objetivos comuns e avançar nas implementações tecnológicas."
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2,
+      "position": [
+        600,
+        1020
+      ],
+      "id": "3b8aea50-b61a-466c-9d55-ac23bf9275e2",
+      "name": "Resumo2"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        260,
+        1020
+      ],
+      "id": "78e20116-1471-4472-a60e-c996abe16590",
+      "name": "Agregar2"
+    },
+    {
+      "parameters": {
+        "content": "## Faz o resumo com IA e faz o envio no meu privado e no grupo, de tudo que foi conversado naquele dia.",
+        "height": 480,
+        "width": 1560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -20,
+        860
+      ],
+      "typeVersion": 1,
+      "id": "46501770-e656-422b-85c9-ccbbc47595a9",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "630a8e05-c5a1-4ae4-a8a0-1f15720f1fcf",
+              "name": "replace",
+              "value": "={{ (() => { \n    const texto = $json.Texto; // Captura o texto do campo \"Texto\"\n    return texto.replace(/#mais/g, '\\u200b'.repeat(7000)); // Substitui \"#mais\" por 1000 caracteres invisíveis\n})() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1080,
+        1020
+      ],
+      "id": "fac40255-3e09-4068-bd51-47193558716c",
+      "name": "Replace2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b3ff71a2-8cb9-4ab9-a2c2-5ac7b58cbfa5",
+              "name": "Texto",
+              "value": "={{ $json.response.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        920,
+        1020
+      ],
+      "id": "c4f9a0c4-c134-4b88-96f5-38b06d90d28a",
+      "name": "Texto2"
+    },
+    {
+      "parameters": {
+        "jsCode": "return (() => {\n  try {\n    // Obtém os dados\n    let dados = $json.data;\n\n    // Se os dados não forem um array, tente normalizar\n    if (!Array.isArray(dados)) {\n      if (dados && typeof dados === 'object') {\n        // Se for um objeto único, coloca dentro de um array\n        dados = [dados];\n      } else {\n        // Caso contrário, retorna um erro\n        return [{ mensagem: \"Erro: Os dados fornecidos não são válidos para processamento.\" }];\n      }\n    }\n\n    // Processa os dados agora normalizados\n    const resumo = dados.map(item => {\n      // Validações para campos individuais\n      const nomeValido = typeof item.Nome === 'string' ? item.Nome.trim() : null;\n      const isNomeInvalido = !nomeValido || nomeValido === \"?\" || nomeValido.toLowerCase() === \"desconhecido\";\n      const nomeUsuario = isNomeInvalido ? \"Usuário não identificado\" : nomeValido;\n\n      const mensagemRespondida = item[\"Mensagem respondida\"]\n        ? `Mensagem Respondida: ${item[\"Mensagem respondida\"]}`\n        : \"Mensagem Respondida: Nenhuma\";\n\n      return `Nome: ${nomeUsuario}, Mensagem: ${item.Mensagem || \"Mensagem não disponível\"}, ${mensagemRespondida}, Horário: ${item.Horário || \"Horário não informado\"}`;\n    }).join('\\n');\n\n    return [{ mensagem: resumo }];\n  } catch (error) {\n    return [{ mensagem: `Erro ao processar as mensagens: ${error.message}` }];\n  }\n})();\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        1020
+      ],
+      "id": "131811ac-0f8e-463b-9e6e-a8ef9c74f0f4",
+      "name": "Texto Único2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        700,
+        1200
+      ],
+      "id": "a6896674-eb06-44b2-9463-ff118d29426c",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "b4auJTU9Z1864AOH",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.ricardolandim.com.br/message/sendText/ricardo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Capturar dados').item.json['Grupo 02 Certo'] }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.replace }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        420
+      ],
+      "id": "45e7fde7-7eca-4924-a2c7-40f4b595c4fc",
+      "name": "Enviar no Grupo 02"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.ricardolandim.com.br/message/sendText/ricardo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Capturar dados').item.json['Grupo 03 Certo'] }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.replace }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        940
+      ],
+      "id": "e63cc3b1-1443-4c67-b321-7b053cda0a86",
+      "name": "Enviar no Grupo 03"
+    },
+    {
+      "parameters": {
+        "content": "```\n    ██████╗ ██╗   ██╗██╗     ██╗ ██████╗ \n    ██╔══██╗██║   ██║██║     ██║██╔═══██╗\n    ██║  ██║██║   ██║██║     ██║██║   ██║\n    ██║  ██║██║   ██║██║     ██║██║   ██║\n    ██████╔╝╚██████╔╝███████╗██║╚██████╔╝\n    ╚═════╝  ╚═════╝ ╚══════╝╚═╝ ╚═════╝ \n                                         \n```",
+        "width": 500,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1580,
+        60
+      ],
+      "typeVersion": 1,
+      "id": "a0ccc0c5-949c-4630-afa5-bb7330bf33d8",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 23
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        560
+      ],
+      "id": "4d19e8f3-edf6-4737-a4b3-1367f1e1182b",
+      "name": "Ativar diariamente às 10pm"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ad7e3078-6fe3-40cb-b82b-4417beb93aea",
+              "name": "Grupo 01 Certo",
+              "value": "120363314229651317@g.us",
+              "type": "string"
+            },
+            {
+              "id": "a7aa7a02-3a16-4128-a35f-87be56e7adbd",
+              "name": "Grupo 02 Certo",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "a4e54bb0-6697-4f83-9e37-8937806e336c",
+              "name": "Grupo 03 Certo",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -660,
+        1020
+      ],
+      "id": "fadd1c2a-8fa9-49ac-956e-f66508acb072",
+      "name": "Capturar dados"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.ricardolandim.com.br/message/sendText/ricardo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "5598984832409@s.whatsapp.net"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.replace }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        620
+      ],
+      "id": "196a3720-fb31-4e40-9d00-9da00bbf98d2",
+      "name": "Enviar no Privado 02"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.ricardolandim.com.br/message/sendText/ricardo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "5598984832409@s.whatsapp.net"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.replace }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        1140
+      ],
+      "id": "e3ed2e1d-883e-4ff3-a077-d8fde140b6f0",
+      "name": "Enviar no Privado 03"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.ricardolandim.com.br/message/sendText/ricardo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "5598984832409@s.whatsapp.net"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.replace }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1300,
+        120
+      ],
+      "id": "f4e9e1f3-cf63-4f3d-9dcc-6615e8232df7",
+      "name": "Enviar no Privado 01"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.ricardolandim.com.br/message/sendText/ricardo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Capturar dados').item.json['Grupo 01 Certo'] }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.replace }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1300,
+        -100
+      ],
+      "id": "6fc0214b-6027-4696-a943-8572051a142f",
+      "name": "Enviar no Grupo 01"
+    },
+    {
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "summarizationMethod": "stuff",
+              "prompt": "=faça um resumo completo Diário do que foi conversado em  \"{{ \n  $json.mensagem.replace(/[\\{\\}\\[\\]\"]/g, '') \n               .replace(/\\n/g, ' ') \n               .replace(/\\r/g, ' ') \n               .replace(/\\\\/g, '\\\\\\\\')\n               .trim()\n}}\"\nhoje é {{ $now }}\n\nsua inspiração será esse formato de resumo, lembre-se que é um diário, nesse formato abaixo está como diário. Quero apenas o resumo, não diga mais nada fora desse modelo abaixo. Faça algo independente do número de mensagens captadas, mínimo de 500 caracteres, porém cite todos os temas abordados no grupo durante o dia. Quero tambem que adicione um \"#mais\" logo após o título, não use markdown:\n\nResumo do Dia no Grupo R.D-MA 📝 - 06/01\n#mais\n\n1. Top 5 Participantes Ativos 🏆\n• Kelvin Vieira - 4 mensagens\n• Fabio Machia - 3 mensagens\n• Frankyston Nogueira - 2 mensagens\n• Outros - 1 mensagem cada\n\n2. Horários de Maior Movimento ⏰\n• Manhã (08:00-12:00) - 7 mensagens\n• Tarde (14:00-18:00) - 5 mensagens\n• Noite (20:00-23:00) - 3 mensagens\n\n3. Discussões Principais 📌\t\nA. Problemas com o Agente de IA - 00h40\n• Participantes: 👨‍💻, Kelvin Vieira, Fabio Machia, Frankyston Nogueira e outros\n• Resumo: A discussão iniciou-se com a apresentação de um diagrama detalhando a estrutura de rede e os prompts utilizados pelo agente de IA. Foi identificado que o agente não estava respondendo adequadamente às instruções, possivelmente devido a falhas na transmissão de conteúdo ou formatação incorreta das credenciais. Os participantes sugeriram revisar as chaves de API, ajustar o fluxo de dados e reconfigurar os prompts para melhorar a resposta do agente.\n\nB. Instalação do Minio para Armazenamento - 07h02\n• Participantes: Kelvin Vieira e outros\n• Resumo: Kelvin relatou dificuldades na configuração do Minio para o envio de imagens no Chatwoot. Ele conseguiu uma solução temporária armazenando as imagens localmente, mas busca uma configuração mais estável e integrada. Foram discutidos problemas de credenciais e permissões, com sugestões de comandos específicos e compartilhamento de documentação para auxiliar na resolução.\n\nC. Agendamento sem Calendários - 08h30\n• Participantes: Fabio Machia e demais membros\n• Resumo: Fabio propôs a criação de um sistema de agendamento baseado em IA que não dependa de calendários tradicionais. A conversa abordou o uso de ferramentas de automação como o n8n, a personalização de templates e a implementação de notificações. Os membros exploraram a possibilidade de criar fluxos flexíveis que permitam aos usuários agendar compromissos de maneira intuitiva e independente de serviços externos.\n\nD. Transcrição de Áudio - 11h30\n• Participantes: Frankyston Nogueira, Kelvin Vieira, Fabio Machia e outros\n• Resumo: Frankyston questionou sobre métodos eficientes para inserir transcrições de áudio em fluxos de mensagens. Foram sugeridas soluções utilizando groq para processar arquivos de áudio e integrar com sistemas de IA e LLM. Os participantes compartilharam experiências sobre configuração no n8n e make, discutindo a qualidade das transcrições e maneiras de otimizar o desempenho para melhorar a experiência do usuário.\n\n4. Outros Temas Relevantes 📋\n• Erro no Supabase: Bernardo pediu ajuda para resolver um erro 404 no Supabase.\n• Reinstalação Pendente: Macrina mencionou dificuldades com uma reinstalação que permanecia pendente.\n• Remoção de Estrutura em File Search: Sérgio e Raphael Lanfredi discutiram como remover uma estrutura específica em resultados de busca de arquivos usando um node code.\n\n5. Eventos Especiais 🎯:\n• 2 eventos especiais registrado hoje.\n\n6. Links Compartilhados 🔗:\n• Links compartilhados hoje.\n\n7.\tClima do Grupo 🌟:\n• O ambiente foi colaborativo e dinâmico, com membros engajados em resolver problemas técnicos e compartilhar conhecimentos. Houve uma disposição geral para ajudar e trocar experiências, fortalecendo o espírito de comunidade e cooperação.\n\n8. Resumo geral do dia 📊:\n• O dia foi intensamente focado em resolver desafios técnicos relacionados a agentes de IA, armazenamento com Minio, sistemas de agendamento inteligentes e transcrição de áudio. A participação ativa dos membros resultou em diversas soluções práticas e sugestões valiosas, demonstrando um forte comprometimento com a melhoria contínua dos projetos em andamento.\n\n9. Observações Finais 💭:\n• A interação constante e a troca de conhecimentos destacaram-se como pontos fortes do grupo, facilitando a superação de obstáculos técnicos e promovendo a inovação nas abordagens adotadas. A colaboração entre os membros reforça a eficácia do grupo em alcançar objetivos comuns e avançar nas implementações tecnológicas."
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2,
+      "position": [
+        600,
+        1520
+      ],
+      "id": "220b2173-d94c-447e-a2b0-4320b9b4326b",
+      "name": "Resumo3"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        260,
+        1520
+      ],
+      "id": "eca3ee37-f07d-4a58-b0ac-9b9f0eb6fc5f",
+      "name": "Agregar3"
+    },
+    {
+      "parameters": {
+        "content": "## Faz o resumo com IA e faz o envio no meu privado e no grupo, de tudo que foi conversado naquele dia.",
+        "height": 480,
+        "width": 1560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -20,
+        1360
+      ],
+      "typeVersion": 1,
+      "id": "87d36bfb-5d8e-4b69-93b2-f4555aa23d70",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "630a8e05-c5a1-4ae4-a8a0-1f15720f1fcf",
+              "name": "replace",
+              "value": "={{ (() => { \n    const texto = $json.Texto; // Captura o texto do campo \"Texto\"\n    return texto.replace(/#mais/g, '\\u200b'.repeat(7000)); // Substitui \"#mais\" por 1000 caracteres invisíveis\n})() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1080,
+        1520
+      ],
+      "id": "d9857d6e-8a09-4d3c-8452-978a67397c33",
+      "name": "Replace3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b3ff71a2-8cb9-4ab9-a2c2-5ac7b58cbfa5",
+              "name": "Texto",
+              "value": "={{ $json.response.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        920,
+        1520
+      ],
+      "id": "6851280e-9f1d-4164-906a-06a352ba0281",
+      "name": "Texto3"
+    },
+    {
+      "parameters": {
+        "jsCode": "return (() => {\n  try {\n    // Obtém os dados\n    let dados = $json.data;\n\n    // Se os dados não forem um array, tente normalizar\n    if (!Array.isArray(dados)) {\n      if (dados && typeof dados === 'object') {\n        // Se for um objeto único, coloca dentro de um array\n        dados = [dados];\n      } else {\n        // Caso contrário, retorna um erro\n        return [{ mensagem: \"Erro: Os dados fornecidos não são válidos para processamento.\" }];\n      }\n    }\n\n    // Processa os dados agora normalizados\n    const resumo = dados.map(item => {\n      // Validações para campos individuais\n      const nomeValido = typeof item.Nome === 'string' ? item.Nome.trim() : null;\n      const isNomeInvalido = !nomeValido || nomeValido === \"?\" || nomeValido.toLowerCase() === \"desconhecido\";\n      const nomeUsuario = isNomeInvalido ? \"Usuário não identificado\" : nomeValido;\n\n      const mensagemRespondida = item[\"Mensagem respondida\"]\n        ? `Mensagem Respondida: ${item[\"Mensagem respondida\"]}`\n        : \"Mensagem Respondida: Nenhuma\";\n\n      return `Nome: ${nomeUsuario}, Mensagem: ${item.Mensagem || \"Mensagem não disponível\"}, ${mensagemRespondida}, Horário: ${item.Horário || \"Horário não informado\"}`;\n    }).join('\\n');\n\n    return [{ mensagem: resumo }];\n  } catch (error) {\n    return [{ mensagem: `Erro ao processar as mensagens: ${error.message}` }];\n  }\n})();\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        1520
+      ],
+      "id": "4594a74c-dc30-400c-9cad-53bf6a9c1d43",
+      "name": "Texto Único3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        740,
+        1680
+      ],
+      "id": "2a6e0f1a-9e44-45d5-af8c-f4e711624415",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "b4auJTU9Z1864AOH",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.ricardolandim.com.br/message/sendText/ricardo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "5598984832409@s.whatsapp.net"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.replace }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        1640
+      ],
+      "id": "eddb566a-56b0-4e9c-9672-43d76bb9d54e",
+      "name": "Enviar no Privado "
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.ricardolandim.com.br/message/sendText/ricardo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Capturar dados').item.json['Grupo 03 Certo'] }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.replace }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        1440
+      ],
+      "id": "15979ddf-4539-4732-ab84-ddfb8e8528e1",
+      "name": "Enviar no Grupo 04"
+    },
+    {
+      "parameters": {
+        "content": "```\n    ██    ██ ██████      ██ \n    ██    ██      ██    ███ \n    ██    ██  █████      ██ \n     ██  ██       ██     ██ \n      ████   ██████  ██  ██ \n                            \n                            \n```",
+        "width": 360,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        240
+      ],
+      "id": "105e2ba9-0143-4d92-9f81-060dfff11bf5",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json['Grupo 01 Certo'] }}",
+                    "rightValue": "={{ $json['Grupo Recebido'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Grupo 01"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5ee04acc-f6e0-4a19-8a08-22fc8ca199a7",
+                    "leftValue": "={{ $json['Grupo 02 Certo'] }}",
+                    "rightValue": "={{ $json['Grupo Recebido'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Grupo 02"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "290af344-f812-4628-95a3-4b1d84894289",
+                    "leftValue": "={{ $json['Grupo 03 Certo'] }}",
+                    "rightValue": "={{ $json['Grupo Recebido'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Grupo 03"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6a5ea985-c4b8-40cb-ab72-0334a73ef14c",
+                    "leftValue": "={{ $json['Grupo 04 Certo'] }}",
+                    "rightValue": "={{ $json['Grupo Recebido'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Grupo 04"
+            }
+          ]
+        },
+        "options": {
+          "allMatchingOutputs": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1360,
+        720
+      ],
+      "id": "686ea35f-f60e-43a4-a1c7-cb3ae6108b6f",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1j6IA8HxnSckj7tYweczvbuPNJ1BYcdiOd1aTASdFklM",
+          "mode": "list",
+          "cachedResultName": "RESUMIDOR PRO - GRUPO 04 - RICARDO",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1j6IA8HxnSckj7tYweczvbuPNJ1BYcdiOd1aTASdFklM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eM3T5rV4FpwJVcphny2III5Ha4ZL0ab6wjzfmciTK5g/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome": "={{ $json.Nome }}",
+            "Mensagem": "={{ $json.Mensagem }}",
+            "Horário": "={{ $json['Horário'] }}",
+            "Mensagem respondida": "={{ $json['Mensagem  Respondida'] }}",
+            "Data": "={{ new Date().toLocaleDateString(\"pt-BR\", { day: '2-digit', month: '2-digit', year: 'numeric' }) }}",
+            "Legenda": "={{ $json.Caption }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem",
+              "displayName": "Mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem respondida",
+              "displayName": "Mensagem respondida",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Legenda",
+              "displayName": "Legenda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Horário",
+              "displayName": "Horário",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -1100,
+        1040
+      ],
+      "id": "379cceac-e3fa-4cc1-afe7-4fb0860255d8",
+      "name": "Salvar Conversas - Grupo  04",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g7SnwdIuneJwIUag",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1j6IA8HxnSckj7tYweczvbuPNJ1BYcdiOd1aTASdFklM",
+          "mode": "list",
+          "cachedResultName": "RESUMIDOR PRO - GRUPO 04 - RICARDO",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1j6IA8HxnSckj7tYweczvbuPNJ1BYcdiOd1aTASdFklM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1j6IA8HxnSckj7tYweczvbuPNJ1BYcdiOd1aTASdFklM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Data",
+              "lookupValue": "={{ new Date().toLocaleDateString(\"pt-BR\", { day: '2-digit', month: '2-digit', year: 'numeric' }) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        60,
+        1520
+      ],
+      "id": "2f09f2a6-0bb3-4916-975d-bc576a2beb68",
+      "name": "Consulta as conversas + filtro - Grupo  04",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "g7SnwdIuneJwIUag",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Organizar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Organizar": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resumo": {
+      "main": [
+        [
+          {
+            "node": "Texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar": {
+      "main": [
+        [
+          {
+            "node": "Texto Único",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto": {
+      "main": [
+        [
+          {
+            "node": "Replace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto Único": {
+      "main": [
+        [
+          {
+            "node": "Resumo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Resumo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Consulta as conversas + filtro - Grupo 01",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consulta as conversas + filtro - Grupo 02",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consulta as conversas + filtro - Grupo 03",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consulta as conversas + filtro - Grupo  04",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta as conversas + filtro - Grupo 01": {
+      "main": [
+        [
+          {
+            "node": "Agregar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta as conversas + filtro - Grupo 02": {
+      "main": [
+        [
+          {
+            "node": "Agregar1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta as conversas + filtro - Grupo 03": {
+      "main": [
+        [
+          {
+            "node": "Agregar2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resumo1": {
+      "main": [
+        [
+          {
+            "node": "Texto1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar1": {
+      "main": [
+        [
+          {
+            "node": "Texto Único1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto1": {
+      "main": [
+        [
+          {
+            "node": "Replace1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto Único1": {
+      "main": [
+        [
+          {
+            "node": "Resumo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Resumo1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resumo2": {
+      "main": [
+        [
+          {
+            "node": "Texto2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar2": {
+      "main": [
+        [
+          {
+            "node": "Texto Único2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto2": {
+      "main": [
+        [
+          {
+            "node": "Replace2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto Único2": {
+      "main": [
+        [
+          {
+            "node": "Resumo2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Resumo2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ativar diariamente às 10pm": {
+      "main": [
+        [
+          {
+            "node": "Capturar dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace": {
+      "main": [
+        [
+          {
+            "node": "Enviar no Grupo 01",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enviar no Privado 01",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capturar dados": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace1": {
+      "main": [
+        [
+          {
+            "node": "Enviar no Grupo 02",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enviar no Privado 02",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace2": {
+      "main": [
+        [
+          {
+            "node": "Enviar no Grupo 03",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enviar no Privado 03",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resumo3": {
+      "main": [
+        [
+          {
+            "node": "Texto3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar3": {
+      "main": [
+        [
+          {
+            "node": "Texto Único3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace3": {
+      "main": [
+        [
+          {
+            "node": "Enviar no Grupo 04",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enviar no Privado ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto3": {
+      "main": [
+        [
+          {
+            "node": "Replace3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto Único3": {
+      "main": [
+        [
+          {
+            "node": "Resumo3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Resumo3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Salvar Conversas - Grupo 01",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Salvar Conversas - Grupo 02",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Salvar Conversas - Grupo 03",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Salvar Conversas - Grupo  04",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta as conversas + filtro - Grupo  04": {
+      "main": [
+        [
+          {
+            "node": "Agregar3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "83af8f80-ff91-4fa4-8dba-2a378eed7241",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-01-20T15:24:06.076Z",
+      "updatedAt": "2025-01-20T15:24:06.076Z",
+      "id": "Eicfvnyw0KgZUadX",
+      "name": "™"
+    },
+    {
+      "createdAt": "2025-01-20T17:50:58.310Z",
+      "updatedAt": "2025-01-20T17:50:58.310Z",
+      "id": "i2qaHZc7nqKB9MIq",
+      "name": "Grupo"
+    }
+  ]
+}
