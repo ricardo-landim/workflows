@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-20T15:44:37.702Z",
-  "updatedAt": "2025-01-20T19:07:35.581Z",
+  "updatedAt": "2025-01-20T19:09:49.674Z",
   "id": "eYg6NIQdRmjFkoW5",
   "name": "BACKUP - GITHUB",
   "active": true,
@@ -799,7 +799,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "e882d912-7dc5-4f11-8087-22ee76193a66",
+  "versionId": "731819d3-9b60-464a-9587-aa5206a70d3c",
   "triggerCount": 3,
   "tags": [
     {
