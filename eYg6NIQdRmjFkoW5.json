@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-01-20T15:44:37.702Z",
-  "updatedAt": "2025-01-20T19:09:49.674Z",
+  "updatedAt": "2025-01-20T19:23:05.901Z",
   "id": "eYg6NIQdRmjFkoW5",
   "name": "BACKUP - GITHUB",
-  "active": true,
+  "active": false,
   "nodes": [
     {
       "parameters": {
@@ -495,61 +495,15 @@
       "name": "Sticky Note8"
     },
     {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "triggerAtHour": 15
-            }
-          ]
-        }
-      },
-      "id": "27ff0e76-8140-4f61-b69a-addbd702ef88",
-      "name": "Backup - 15:00",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        -800,
-        740
-      ]
-    },
-    {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "triggerAtHour": 23
-            }
-          ]
-        }
-      },
-      "id": "07b729bb-499e-4b5f-bc70-805918183ac7",
-      "name": "Backup - 23:00",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        -800,
-        420
-      ]
-    },
-    {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "triggerAtHour": 23
-            }
-          ]
-        }
-      },
-      "id": "7245f70c-4f74-4096-b471-d3db9288de38",
-      "name": "Backup - 12:00",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
       "position": [
         -800,
         580
-      ]
+      ],
+      "id": "3c6a7d8e-8b1e-4931-a9be-48b8344ff078",
+      "name": "When clicking ‘Test workflow’"
     }
   ],
   "connections": {
@@ -732,29 +686,7 @@
         ]
       ]
     },
-    "Backup - 15:00": {
-      "main": [
-        [
-          {
-            "node": "Infos Basicas",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Backup - 23:00": {
-      "main": [
-        [
-          {
-            "node": "Infos Basicas",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Backup - 12:00": {
+    "When clicking ‘Test workflow’": {
       "main": [
         [
           {
@@ -793,13 +725,16 @@
     },
     "node:Backup - 12:00": {
       "recurrenceRules": []
+    },
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
     }
   },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "731819d3-9b60-464a-9587-aa5206a70d3c",
+  "versionId": "6eb32f41-7ca3-4f8f-ba77-4b90ecfb5f7e",
   "triggerCount": 3,
   "tags": [
     {
