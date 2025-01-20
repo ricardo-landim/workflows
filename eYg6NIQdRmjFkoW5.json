@@ -1,0 +1,818 @@
+{
+  "createdAt": "2025-01-20T15:44:37.702Z",
+  "updatedAt": "2025-01-20T19:07:35.581Z",
+  "id": "eYg6NIQdRmjFkoW5",
+  "name": "BACKUP - GITHUB",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "61df5ffb-7587-4ec0-a4ef-5d03168857c5",
+              "name": "owner",
+              "value": "ricardo-landim",
+              "type": "string"
+            },
+            {
+              "id": "167893e5-9de8-4273-9fc3-3f2da550ebf7",
+              "name": "repository",
+              "value": "workflows",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7b8de94a-5560-4612-a2db-7d17777dbc1d",
+      "name": "Infos Basicas",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -500,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.data }}",
+        "options": {}
+      },
+      "id": "0aea4d62-35db-4890-8369-cd09d83f1172",
+      "name": "Workflow",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "format": true,
+          "fileName": "={{ $json.id }}.json"
+        }
+      },
+      "id": "985e4540-a649-451d-90f1-f783d7025930",
+      "name": "Convert to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1020,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Infos Basicas').item.json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Infos Basicas').item.json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "={{ $json.id }}.json",
+        "additionalParameters": {}
+      },
+      "id": "9e1f165e-bf29-4bf4-9ce5-2569810d0733",
+      "name": "GitHub",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        100,
+        480
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "X0fh8yNtgIFpyw1r",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "id": "7e090b34-63c1-4224-b611-16241eb4bb67",
+      "name": "Extract from File",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        320,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d55c571b-e214-48c5-9516-b16c71f5419e",
+              "name": "data",
+              "value": "={{ $json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6146e40c-36bb-4519-9a82-8d2bb92b76b6",
+      "name": "Workflow dados",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "acf4fffc-2a2e-4c6b-a8af-ca1cc1e426b8",
+      "name": "Obter todos",
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        580
+      ],
+      "credentials": {
+        "n8nApi": {
+          "id": "seZoclA4Kq9Jlofd",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "data.id",
+              "field2": "data.id"
+            }
+          ]
+        },
+        "resolve": "preferInput2",
+        "options": {}
+      },
+      "id": "1da0cac0-0773-4e54-bfe6-28810ca62d25",
+      "name": "Compare Datasets",
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        580,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Infos Basicas').first().json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Infos Basicas').first().json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "={{ $('Workflow').item.json.id }}.json",
+        "binaryData": true,
+        "commitMessage": "={{ $('Workflow').item.json.name }} {{ $now.toString() }}"
+      },
+      "id": "302eac4f-65ec-4fb0-938e-212b681bedff",
+      "name": "GitHub Create File",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        800
+      ],
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "X0fh8yNtgIFpyw1r",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.data }}",
+        "options": {}
+      },
+      "id": "12f3907c-edfb-48cc-807f-09a8c43cc753",
+      "name": "Workflow1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "format": true,
+          "fileName": "={{ $json.id }}.json"
+        }
+      },
+      "id": "b009a200-6dc4-4709-aa4e-c1965faf913b",
+      "name": "Convert to File1",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Infos Basicas').first().json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Infos Basicas').first().json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "={{ $('Workflow1').item.json.id }}.json",
+        "binaryData": true,
+        "commitMessage": "={{ $('Workflow1').item.json.name }} {{ $now.toString() }}"
+      },
+      "id": "5d972ea2-0b30-46b1-bedd-61eb56bd9972",
+      "name": "GitHub Edit File",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        340
+      ],
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "X0fh8yNtgIFpyw1r",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Disparos",
+        "height": 563,
+        "width": 273,
+        "color": 4
+      },
+      "id": "b7d3054f-b5a6-4faa-a3c8-3f6dfed8ab61",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Dados de Entrada",
+        "height": 284,
+        "width": 215
+      },
+      "id": "8a010078-9114-4f15-823e-1ce80e03a3d4",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Puxa os Workflows do n8n:\n### Em formato JSON\n",
+        "height": 313,
+        "width": 257,
+        "color": 7
+      },
+      "id": "8f2cbc89-3c3c-4318-844a-3bce5a0a8ec4",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Faz update de Workflows Existentes:\n### Em formato JSON\n",
+        "height": 302,
+        "width": 677,
+        "color": 4
+      },
+      "id": "2b5e867c-cf87-4844-9845-6b300deec004",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        740,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Faz upload de novos Workflows:\n### Em formato JSON\n",
+        "height": 302,
+        "width": 677,
+        "color": 4
+      },
+      "id": "2498696a-07df-4fbc-8a53-834268f223c4",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        740,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Backups dos Flows",
+        "height": 451.8914593637933,
+        "width": 493.95101257278094,
+        "color": 6
+      },
+      "id": "788ffb05-da0b-409f-99a1-e7e5e24fd061",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        20,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obter a entrada do campo \"data\"\nconst inputData = $json.data;\n\n// Processa a mensagem para obter a data completa no formato \"AAAA-MM-DD HH:mm\"\nconst result = inputData\n  .trim()\n  .replace(/^.*(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}):.*$/, '$1 $2'); // Extrai a data e horário (sem segundos)\n\n// Retorna o resultado no formato esperado pelo n8n\nreturn [{ data: result }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        560
+      ],
+      "id": "becba238-ccfc-4f93-8716-995ed75d709f",
+      "name": "Data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e890f228-5460-47c6-9841-ef13f0d17acf",
+              "name": "data",
+              "value": "={{ $json.commit.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1720,
+        560
+      ],
+      "id": "adaa54a8-5d4f-4e85-8a4e-acdbfdb4ecaa",
+      "name": "Data1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1520,
+        560
+      ],
+      "id": "bc6bcef9-fe3f-4a2c-b0e1-74a182c31306",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "content": "## Relatório de Backup Github concluído com Sucesso\n### API: Evolution 2.2.0",
+        "height": 280,
+        "width": 880,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        460
+      ],
+      "id": "9f3774d3-283a-4907-9bc5-5c0b5eb1980f",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "ricardo",
+        "remoteJid": "+5598984832409@s.whatsapp.net",
+        "messageText": "=Relatório de Backup Github no repositório *Business*\n*Data*: {{ $json.data }}\n\nInformo que o procedimento de backup foi realizado hoje com sucesso. \nTodos os workflows foram incluídos e verificados:\n\n✅ Workflows (BUSQUE AI)\n✅ Credentials (BUSQUE AI)\n\n*Status*: Concluído *sem erros*",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        560
+      ],
+      "id": "1e160061-f80d-47f1-b232-f6c7dd027389",
+      "name": "Relatório de Backup ✅",
+      "credentials": {
+        "evolutionApi": {
+          "id": "Fgt70wh5ojQXEIkf",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "```\n ██████╗ ██╗████████╗██╗  ██╗██╗   ██╗██████╗ \n██╔════╝ ██║╚══██╔══╝██║  ██║██║   ██║██╔══██╗\n██║  ███╗██║   ██║   ███████║██║   ██║██████╔╝\n██║   ██║██║   ██║   ██╔══██║██║   ██║██╔══██╗\n╚██████╔╝██║   ██║   ██║  ██║╚██████╔╝██████╔╝\n ╚═════╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ \n                                              \n```",
+        "height": 360,
+        "width": 520,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "13e5bbce-36f5-4ffe-b2be-31f4f6cfbe78",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "```\n__/\\\\\\________/\\\\\\______/\\\\\\__________/\\\\\\\\\\\\\\\\\\_____        \n _\\/\\\\\\_______\\/\\\\\\__/\\\\\\\\\\\\\\________/\\\\\\///////\\\\\\___       \n  _\\//\\\\\\______/\\\\\\__\\/////\\\\\\_______\\///______\\//\\\\\\__      \n   __\\//\\\\\\____/\\\\\\_______\\/\\\\\\_________________/\\\\\\/___     \n    ___\\//\\\\\\__/\\\\\\________\\/\\\\\\______________/\\\\\\//_____    \n     ____\\//\\\\\\/\\\\\\_________\\/\\\\\\___________/\\\\\\//________   \n      _____\\//\\\\\\\\\\__________\\/\\\\\\_________/\\\\\\/___________  \n       ______\\//\\\\\\___________\\/\\\\\\__/\\\\\\__/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_ \n        _______\\///____________\\///__\\///__\\///////////////__\n```",
+        "height": 200,
+        "width": 660,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        160
+      ],
+      "id": "5847eab5-0471-433c-bb41-ecd16130b386",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 15
+            }
+          ]
+        }
+      },
+      "id": "27ff0e76-8140-4f61-b69a-addbd702ef88",
+      "name": "Backup - 15:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 23
+            }
+          ]
+        }
+      },
+      "id": "07b729bb-499e-4b5f-bc70-805918183ac7",
+      "name": "Backup - 23:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 23
+            }
+          ]
+        }
+      },
+      "id": "7245f70c-4f74-4096-b471-d3db9288de38",
+      "name": "Backup - 12:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        580
+      ]
+    }
+  ],
+  "connections": {
+    "Infos Basicas": {
+      "main": [
+        [
+          {
+            "node": "Obter todos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "GitHub Create File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow dados": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Obter todos": {
+      "main": [
+        [
+          {
+            "node": "GitHub",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Workflow dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compare Datasets": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "GitHub Edit File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Edit File": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Create File": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Data": {
+      "main": [
+        [
+          {
+            "node": "Relatório de Backup ✅",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data1": {
+      "main": [
+        [
+          {
+            "node": "Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup - 15:00": {
+      "main": [
+        [
+          {
+            "node": "Infos Basicas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup - 23:00": {
+      "main": [
+        [
+          {
+            "node": "Infos Basicas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup - 12:00": {
+      "main": [
+        [
+          {
+            "node": "Infos Basicas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Salva todo dia 11pm": {
+      "recurrenceRules": []
+    },
+    "node:Salva todo dia 12pm": {
+      "recurrenceRules": []
+    },
+    "node:Salva todo dia 3pm": {
+      "recurrenceRules": []
+    },
+    "node:Salva todo dia 11pm1": {
+      "recurrenceRules": []
+    },
+    "node:Salva todo dia 11pm2": {
+      "recurrenceRules": []
+    },
+    "node:Backup - 15:00": {
+      "recurrenceRules": []
+    },
+    "node:Backup - 23:00": {
+      "recurrenceRules": []
+    },
+    "node:Backup - 12:00": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "e882d912-7dc5-4f11-8087-22ee76193a66",
+  "triggerCount": 3,
+  "tags": [
+    {
+      "createdAt": "2025-01-20T15:24:06.076Z",
+      "updatedAt": "2025-01-20T15:24:06.076Z",
+      "id": "Eicfvnyw0KgZUadX",
+      "name": "™"
+    },
+    {
+      "createdAt": "2025-01-20T15:45:04.949Z",
+      "updatedAt": "2025-01-20T15:45:04.949Z",
+      "id": "7s38kDT8oLd8AT7V",
+      "name": "Segurança"
+    }
+  ]
+}
