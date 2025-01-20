@@ -1,0 +1,344 @@
+{
+  "createdAt": "2025-01-20T17:53:36.613Z",
+  "updatedAt": "2025-01-20T17:53:49.687Z",
+  "id": "xvg5O28NKetnzjLP",
+  "name": "RESTAURA BACKUP - GITHUB",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ecdc7572-0d60-4fb1-af08-3608be8ee0ba",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        40,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "workflowId": {
+          "__rl": true,
+          "value": "={{ $json.data.id }}",
+          "mode": "id"
+        },
+        "workflowObject": "={{ JSON.stringify($json.data) }}",
+        "requestOptions": {}
+      },
+      "id": "58308af2-84c4-4793-a8c8-b1a3608f4482",
+      "name": "n8n",
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        920,
+        300
+      ],
+      "credentials": {
+        "n8nApi": {
+          "id": "seZoclA4Kq9Jlofd",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "200d0b65-a68f-47d6-b6ea-1df49f417ecc",
+              "name": "arquirvo",
+              "value": "ricardo-landim/0m5NWU4NvuUfff2I.json",
+              "type": "string"
+            },
+            {
+              "id": "0cf92acd-3e55-4618-881e-97c2c60db6bc",
+              "name": "dono",
+              "value": "ricardo-landim",
+              "type": "string"
+            },
+            {
+              "id": "257bb5a0-e186-44a5-a21a-fcd751f9f567",
+              "name": "repositorio",
+              "value": "n8n-busqueai",
+              "type": "string"
+            },
+            {
+              "id": "5ceff380-1ffb-4e87-afff-b296d8a92637",
+              "name": "versao",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ae6f6bd3-f704-44ce-97c8-0305d8c480b3",
+      "name": "Info Basica",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## RESTAURA BACKUP DO MEU REPOSITÓRIO NO GITHUB",
+        "height": 280,
+        "width": 1860,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        220
+      ],
+      "id": "d598cc46-0c57-44d2-b45d-eb909dcdc324",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "```\n        ██╗   ██╗██████╗     ██████╗ \n        ██║   ██║╚════██╗   ██╔═████╗\n        ██║   ██║ █████╔╝   ██║██╔██║\n        ╚██╗ ██╔╝ ╚═══██╗   ████╔╝██║\n         ╚████╔╝ ██████╔╝██╗╚██████╔╝\n          ╚═══╝  ╚═════╝ ╚═╝ ╚═════╝ \n                                     \n```",
+        "width": 500,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        600,
+        40
+      ],
+      "id": "a19a58a0-ce02-4474-a2a9-f56dc2c3c630",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "```\n    ██████╗ ███████╗███████╗████████╗ █████╗ ██╗   ██╗██████╗  █████╗     ██████╗  █████╗  ██████╗██╗  ██╗██╗   ██╗██████╗ \n    ██╔══██╗██╔════╝██╔════╝╚══██╔══╝██╔══██╗██║   ██║██╔══██╗██╔══██╗    ██╔══██╗██╔══██╗██╔════╝██║ ██╔╝██║   ██║██╔══██╗\n    ██████╔╝█████╗  ███████╗   ██║   ███████║██║   ██║██████╔╝███████║    ██████╔╝███████║██║     █████╔╝ ██║   ██║██████╔╝\n    ██╔══██╗██╔══╝  ╚════██║   ██║   ██╔══██║██║   ██║██╔══██╗██╔══██║    ██╔══██╗██╔══██║██║     ██╔═██╗ ██║   ██║██╔═══╝ \n    ██║  ██║███████╗███████║   ██║   ██║  ██║╚██████╔╝██║  ██║██║  ██║    ██████╔╝██║  ██║╚██████╗██║  ██╗╚██████╔╝██║     \n    ╚═╝  ╚═╝╚══════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     \n                                                                                                                           \n```",
+        "width": 1280,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        200,
+        -160
+      ],
+      "id": "59fee4b6-606b-4285-aef3-555961487a0c",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "ricardo",
+        "remoteJid": "5598984832409@s.whatsapp.net",
+        "messageText": "=Relatório de restauração de Backup pelo Github no repositório *BUSQUE AI*\n*Data*: {{ $json.data }}\n\nInformo que o procedimento de restauração foi realizado hoje com sucesso. \nTodos os workflow foram incluídos e verificados:\n\n✅ Restauração de Workflows (BUSQUE AI)\n\n*Status*: Concluído *sem erros*",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        300
+      ],
+      "id": "5a658032-f0cb-4558-8bc2-e21abb84d321",
+      "name": "Relatório de restauração ✅",
+      "credentials": {
+        "evolutionApi": {
+          "id": "Fgt70wh5ojQXEIkf",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $json.dono }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $json.repositorio }}",
+          "mode": "name"
+        },
+        "filePath": "={{ $json.arquirvo }}",
+        "additionalParameters": {
+          "reference": "={{ $json.versao }}"
+        }
+      },
+      "id": "23654c9e-7daf-457d-a7e6-a93ce16ce486",
+      "name": "GitHub",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ],
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "X0fh8yNtgIFpyw1r",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "id": "54eeecf4-a015-43ed-b852-4cecb7266458",
+      "name": "Extract from File",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obter a entrada do campo \"data\"\nconst inputData = $json.data;\n\n// Processa a mensagem para obter a data completa no formato \"AAAA-MM-DD HH:mm\"\nconst result = inputData\n  .trim()\n  .replace(/^.*(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}):.*$/, '$1 $2'); // Extrai a data e horário (sem segundos)\n\n// Retorna o resultado no formato esperado pelo n8n\nreturn [{ data: result }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        300
+      ],
+      "id": "740797ec-4514-4e8c-8e9e-62487872e0d5",
+      "name": "Formata Data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e890f228-5460-47c6-9841-ef13f0d17acf",
+              "name": "data",
+              "value": "={{ $json.commit.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1140,
+        300
+      ],
+      "id": "b729b61a-5bb4-4c12-bdf8-5cd5f3cd96a3",
+      "name": "Separa Data"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Info Basica",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Info Basica": {
+      "main": [
+        [
+          {
+            "node": "GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n": {
+      "main": [
+        [
+          {
+            "node": "Separa Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "n8n",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formata Data": {
+      "main": [
+        [
+          {
+            "node": "Relatório de restauração ✅",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separa Data": {
+      "main": [
+        [
+          {
+            "node": "Formata Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "f510513c-1d94-49c8-8125-c09cf5125112",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-01-20T15:24:06.076Z",
+      "updatedAt": "2025-01-20T15:24:06.076Z",
+      "id": "Eicfvnyw0KgZUadX",
+      "name": "™"
+    },
+    {
+      "createdAt": "2025-01-20T17:24:06.881Z",
+      "updatedAt": "2025-01-20T17:24:06.881Z",
+      "id": "288CK2NMUjcq7rJw",
+      "name": "Backup"
+    }
+  ]
+}
