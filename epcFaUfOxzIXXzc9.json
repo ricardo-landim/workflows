@@ -1,0 +1,447 @@
+{
+  "createdAt": "2025-01-20T17:50:07.466Z",
+  "updatedAt": "2025-01-20T17:50:16.986Z",
+  "id": "epcFaUfOxzIXXzc9",
+  "name": "[PAINEL] INSTÂNCIAS EVO - CLIENTES",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>BUSQUE AI - Gerador de QR Code</title>\n    <script src=\"https://cdn.tailwindcss.com\"></script>\n  </head>\n  <body>\n    <div class=\"min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 flex flex-col\">\n      <div class=\"container mx-auto px-4 py-8 flex-grow\">\n        <!-- Logo -->\n        <div class=\"flex justify-center mb-12\">\n          <h1 class=\"text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400\">\n            BUSQUE AI\n          </h1>\n        </div>\n\n        <!-- Main Container -->\n        <div class=\"w-full max-w-md mx-auto p-8 rounded-2xl shadow-2xl bg-gray-800/50 backdrop-blur-sm border border-gray-700\">\n          <h2 class=\"text-2xl font-bold mb-8 text-center\">Gerador de QR Code</h2>\n\n          <form id=\"qrForm\" class=\"space-y-6\">\n            <input\n              type=\"text\"\n              id=\"instanceName\"\n              placeholder=\"Nome da instância\"\n              class=\"w-full h-10 rounded-md border border-gray-600 bg-gray-700/50 px-3 py-2 text-base text-white placeholder:text-gray-400\"\n            />\n\n            <button\n              type=\"submit\"\n              class=\"w-full bg-gradient-to-r from-blue-500 to-teal-400 hover:from-blue-600 hover:to-teal-500 text-white h-10 px-4 py-2 rounded-md inline-flex items-center justify-center gap-2\"\n              id=\"submitButton\"\n            >\n              <span id=\"buttonText\">Gerar QR Code</span>\n              <svg id=\"loadingIcon\" class=\"animate-spin h-4 w-4 hidden\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\">\n                <circle class=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"4\"></circle>\n                <path class=\"opacity-75\" fill=\"currentColor\" d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\"></path>\n              </svg>\n            </button>\n          </form>\n\n          <!-- QR Code Display -->\n          <div id=\"qrCodeDisplay\" class=\"mt-8 space-y-4 hidden\">\n            <div class=\"flex justify-center\">\n              <img id=\"qrCodeImage\" src=\"\" alt=\"QR Code\" class=\"max-w-full rounded-lg shadow-lg\" />\n            </div>\n            <div id=\"timer\" class=\"font-bold text-lg text-center text-blue-400\"></div>\n          </div>\n        </div>\n      </div>\n\n      <!-- Footer -->\n      <footer class=\"py-6 text-center text-gray-400\">\n        Desenvolvido por \n        <a\n          href=\"https://instagram.com/oricardolandim\"\n          target=\"_blank\"\n          rel=\"noopener noreferrer\"\n          class=\"text-blue-400 hover:text-blue-300 transition-colors\"\n        >\n          LANDIM\n        </a>\n      </footer>\n    </div>\n\n    <script>\n      let timeLeft = 30;\n      let timerInterval;\n      let currentInstanceName = '';\n\n      async function generateQRCode(isInitial = false) {\n        const instanceName = document.getElementById('instanceName').value;\n        if (!instanceName) {\n          alert('Por favor, insira o nome da instância.');\n          return;\n        }\n\n        const submitButton = document.getElementById('submitButton');\n        const buttonText = document.getElementById('buttonText');\n        const loadingIcon = document.getElementById('loadingIcon');\n        const qrCodeDisplay = document.getElementById('qrCodeDisplay');\n\n        submitButton.disabled = true;\n        buttonText.textContent = 'Gerando...';\n        loadingIcon.classList.remove('hidden');\n        qrCodeDisplay.classList.add('hidden');\n\n        try {\n          const endpoint = isInitial\n            ? 'https://webhookn8n.ricardolandim.com.br/webhook/criar-instancia-evolution'\n            : 'https://webhookn8n.ricardolandim.com.br/webhook/atualizar-qr-code';\n\n          const response = await fetch(endpoint, {\n            method: 'POST',\n            headers: { 'Content-Type': 'application/json' },\n            body: JSON.stringify({ instanceName }),\n          });\n\n          if (!response.ok) throw new Error('Erro na resposta do servidor');\n\n          const contentType = response.headers.get('content-type');\n          let imgSrc;\n\n          if (contentType?.includes('application/json')) {\n            const data = await response.json();\n            imgSrc = `data:image/png;base64,${data.qrCodeBase64}`;\n          } else {\n            const blob = await response.blob();\n            imgSrc = URL.createObjectURL(blob);\n          }\n\n          document.getElementById('qrCodeImage').src = imgSrc;\n          qrCodeDisplay.classList.remove('hidden');\n          currentInstanceName = instanceName;\n          startTimer();\n        } catch (error) {\n          console.error('Erro ao gerar QR code:', error);\n          alert('Erro ao gerar QR code. Por favor, tente novamente.');\n        } finally {\n          submitButton.disabled = false;\n          buttonText.textContent = 'Gerar QR Code';\n          loadingIcon.classList.add('hidden');\n        }\n      }\n\n      function startTimer() {\n        clearInterval(timerInterval);\n        timeLeft = 30;\n        updateTimer();\n        timerInterval = setInterval(updateTimer, 1000);\n      }\n\n      function updateTimer() {\n        const timerElement = document.getElementById('timer');\n        timerElement.textContent = `Novo QR Code em: ${timeLeft}s`;\n\n        if (timeLeft === 0) {\n          generateQRCode(false);\n        } else {\n          timeLeft--;\n        }\n      }\n\n      document.getElementById('qrForm').addEventListener('submit', (e) => {\n        e.preventDefault();\n        generateQRCode(true);\n      });\n    </script>\n  </body>\n</html>"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        120
+      ],
+      "id": "2b0a2bd5-d03a-418b-8be4-d48826702669",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        680,
+        120
+      ],
+      "id": "c2f3db05-3b61-4ba5-81c2-c3ab1790ba38",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseDataSource": "set",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1780,
+        120
+      ],
+      "id": "362cd921-8122-4b49-9b47-042bd3e498eb",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseDataSource": "set",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1780,
+        300
+      ],
+      "id": "65722ec1-ac0b-484a-a537-1b5de4020472",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "url": "=https://evolution.ricardolandim.com.br/instance/connect/{{ $json.body.instanceName }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        300
+      ],
+      "id": "f92a9a19-1f63-401f-acd6-01b7089862cb",
+      "name": "Conectar Instância Evo"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution.ricardolandim.com.br/instance/create",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "instanceName",
+              "value": "={{ $json.body.instanceName }}"
+            },
+            {
+              "name": "qrcode",
+              "value": true
+            },
+            {
+              "name": "integration",
+              "value": "WHATSAPP-BAILEYS"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        120
+      ],
+      "id": "ff90b1de-0820-42e3-adc3-7c171d10092e",
+      "name": "Criar Instância Evo"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        300
+      ],
+      "id": "d5361038-c131-49ba-89dc-56de47ff3519",
+      "name": "Convertendo"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        120
+      ],
+      "id": "1539a6a3-3d59-4b81-b695-e84e9a3969fc",
+      "name": "Convertando"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7997d699-2380-48aa-8dc3-b1eac974e16e",
+              "name": "base64",
+              "value": "={{ $json.qrcode.base64.split(',').last() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1420,
+        120
+      ],
+      "id": "9460cf1b-cb2c-4ae0-8419-6a0e54ba4303",
+      "name": "Instância á criar"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7997d699-2380-48aa-8dc3-b1eac974e16e",
+              "name": "base64",
+              "value": "={{ $json.base64.split(',').last() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1420,
+        300
+      ],
+      "id": "b63eb643-cea1-4d01-9239-2844acbbdcb5",
+      "name": "Instância à ser conectada"
+    },
+    {
+      "parameters": {
+        "content": "## Gerar e conectar QR-CODE\n### Versão 2.2.0\n#### Alternativa Z-API\n",
+        "height": 297,
+        "width": 920,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1452002a-2e36-4b35-a0f5-4e95c00f9813",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Webhooks para conectar e atualizar automaticamente na EvoAPI\n### Versão 2.2.0\n#### Alternativa Z-API\n",
+        "height": 483,
+        "width": 1060,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        940,
+        0
+      ],
+      "id": "ca91fd02-fd93-4f24-9336-71c49b622c9c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "path": "instanciaevolution",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        120,
+        120
+      ],
+      "id": "64af7608-316e-4920-828f-c434d14cfe03",
+      "name": "Pagina do QR code",
+      "webhookId": "cce5e6b5-f99a-48a3-8b18-cf524f03c4ce"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "criar-instancia-evolution",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        120
+      ],
+      "id": "d175c09c-6d52-493f-8f44-b344023ac457",
+      "name": "criar-instancia-evolution",
+      "webhookId": "f3988766-f52b-4be0-b0bd-254e485671a3"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "atualizar-qr-code",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        300
+      ],
+      "id": "8b460370-4a34-44cc-8b82-645c306c6dca",
+      "name": "Atualiza qr code",
+      "webhookId": "f3988766-f52b-4be0-b0bd-254e485671a3"
+    },
+    {
+      "parameters": {
+        "content": "```\n    ██╗      ██████╗  ██████╗ ██╗███╗   ██╗              ███████╗██╗   ██╗ ██████╗ \n    ██║     ██╔═══██╗██╔════╝ ██║████╗  ██║              ██╔════╝██║   ██║██╔═══██╗\n    ██║     ██║   ██║██║  ███╗██║██╔██╗ ██║    █████╗    █████╗  ██║   ██║██║   ██║\n    ██║     ██║   ██║██║   ██║██║██║╚██╗██║    ╚════╝    ██╔══╝  ╚██╗ ██╔╝██║   ██║\n    ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║              ███████╗ ╚████╔╝ ╚██████╔╝\n    ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝              ╚══════╝  ╚═══╝   ╚═════╝ \n                                                                                   \n```",
+        "width": 920
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        320
+      ],
+      "id": "250feda6-368d-4309-8f54-333d9380af77",
+      "name": "Sticky Note2"
+    }
+  ],
+  "connections": {
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conectar Instância Evo": {
+      "main": [
+        [
+          {
+            "node": "Instância à ser conectada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criar Instância Evo": {
+      "main": [
+        [
+          {
+            "node": "Instância á criar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertendo": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertando": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instância á criar": {
+      "main": [
+        [
+          {
+            "node": "Convertando",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instância à ser conectada": {
+      "main": [
+        [
+          {
+            "node": "Convertendo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pagina do QR code": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "criar-instancia-evolution": {
+      "main": [
+        [
+          {
+            "node": "Criar Instância Evo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualiza qr code": {
+      "main": [
+        [
+          {
+            "node": "Conectar Instância Evo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "8e7d21db-1917-411b-9efd-922a1670207b",
+  "triggerCount": 3,
+  "tags": [
+    {
+      "createdAt": "2025-01-20T15:24:06.076Z",
+      "updatedAt": "2025-01-20T15:24:06.076Z",
+      "id": "Eicfvnyw0KgZUadX",
+      "name": "™"
+    },
+    {
+      "createdAt": "2025-01-20T15:45:04.949Z",
+      "updatedAt": "2025-01-20T15:45:04.949Z",
+      "id": "7s38kDT8oLd8AT7V",
+      "name": "Segurança"
+    }
+  ]
+}
