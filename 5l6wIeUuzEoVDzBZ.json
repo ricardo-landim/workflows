@@ -1,0 +1,604 @@
+{
+  "createdAt": "2025-01-20T15:24:38.077Z",
+  "updatedAt": "2025-01-20T16:02:00.817Z",
+  "id": "5l6wIeUuzEoVDzBZ",
+  "name": "TRANSCRITOR PRO - Whatsapp: BUSQUE AI",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "transcrito-pro",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        60,
+        340
+      ],
+      "id": "7978c376-cc29-462d-a63e-bbc07856db5e",
+      "name": "Webhook",
+      "webhookId": "5c38cac1-7a0e-44cb-9121-fed75d745891"
+    },
+    {
+      "parameters": {
+        "content": "## Faz o resumo com IA, e envia a transcrição do áudio também. \n### Detalhes: \n- Para mensagens privadas é adicionado um \"emoji\" de mage.\n- A mensagem com resumo e transcrição responde o áudio.",
+        "height": 460,
+        "width": 980,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1300,
+        180
+      ],
+      "typeVersion": 1,
+      "id": "228c792e-c342-4366-ae51-5318241e623a",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Capturar os áudios que envia e transcreve",
+        "height": 460,
+        "width": 1280,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        180
+      ],
+      "typeVersion": 1,
+      "id": "bb1a9a0e-9d93-4912-bb20-8f3cd5391321",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5a6eadb8-38d2-4966-8067-52e959dba7f5",
+              "leftValue": "={{ $json.body.data.key.fromMe }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "b102d611-d978-40cb-922d-f9e19a6bad7f",
+              "leftValue": "={{ $json.body.data.messageType }}",
+              "rightValue": "audioMessage",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        460,
+        880
+      ],
+      "id": "13dedb93-0a8f-4432-87c6-ba6b79c1e228",
+      "name": "fromMe"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        700,
+        1000
+      ],
+      "id": "77feb324-928b-42bf-b411-80ac7066f13c",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "summarizationMethod": "stuff",
+              "prompt": "=Resuma o texto em poucas palavras de forma assertiva:\n\n\"{{ $json.text }}\"\n\nDescrever apenas o que foi falado na mensagem.\nEsse é o nome de quem enviou a mensagem:{{ $('Organizar').item.json.Nome }}\n\nNunca usar aspas ou caracteres especiais, apenas dizer o que o usuário enviou, de uma forma resumida."
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        340
+      ],
+      "id": "06cfb82e-44b9-4121-94ce-52234b57bf27",
+      "name": "Resumo"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Organizar').item.json.app.evo.serverUrl }}/message/sendText/{{ $('Organizar').item.json.app.evo.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"{{ $('Organizar').item.json['Quem enviou'] }}\",\n  \"text\": \"> 🧙🏼‍♂️ *Resumo e transcrição do áudio de {{ $('Organizar').item.json['Duração Áudio'] }} segundos*\\n\\n*📝 Resumo*\\n\\n{{ $('Resumo').item.json.response.text }}\\n\\n🔈 *Transcrição*: \\n{{ $('Transcreve audio - Groq').item.json.text }}\\n\\n> _*BUSQUE AI*_\",\n  \"quoted\": {\n    \"key\": {\n      \"id\": \"{{ $('Organizar').item.json.messageId }}\"\n    }\n  }\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2060,
+        340
+      ],
+      "id": "837f8dcd-0dcc-4dc8-bb29-2e9123098886",
+      "name": "Enviar a Transcrição"
+    },
+    {
+      "parameters": {
+        "content": "```\n    ████████╗██████╗  █████╗ ███╗   ██╗███████╗ ██████╗██████╗ ██╗████████╗ ██████╗ ██████╗     ██████╗ ██████╗  ██████╗ \n    ╚══██╔══╝██╔══██╗██╔══██╗████╗  ██║██╔════╝██╔════╝██╔══██╗██║╚══██╔══╝██╔═══██╗██╔══██╗    ██╔══██╗██╔══██╗██╔═══██╗\n       ██║   ██████╔╝███████║██╔██╗ ██║███████╗██║     ██████╔╝██║   ██║   ██║   ██║██████╔╝    ██████╔╝██████╔╝██║   ██║\n       ██║   ██╔══██╗██╔══██║██║╚██╗██║╚════██║██║     ██╔══██╗██║   ██║   ██║   ██║██╔══██╗    ██╔═══╝ ██╔══██╗██║   ██║\n       ██║   ██║  ██║██║  ██║██║ ╚████║███████║╚██████╗██║  ██║██║   ██║   ╚██████╔╝██║  ██║    ██║     ██║  ██║╚██████╔╝\n       ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝ \n                                                                                                                         \n```",
+        "width": 1280,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "2b039700-738a-4676-9a32-423bcc2b66ad",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ad7e3078-6fe3-40cb-b82b-4417beb93aea",
+              "name": "Número Certo",
+              "value": "5598984834209@s.whatsapp.net",
+              "type": "string"
+            },
+            {
+              "id": "450a265d-c325-49b4-96e6-e39721f82c48",
+              "name": "Quem Recebeu",
+              "value": "={{ $json.body.sender }}",
+              "type": "string"
+            },
+            {
+              "id": "722e2251-7328-41d3-a75f-11aa8554acc9",
+              "name": "Nome",
+              "value": "={{ $json.body.data.pushName }}",
+              "type": "string"
+            },
+            {
+              "id": "91ec7b09-b97d-4718-92e5-dee3a695ecf7",
+              "name": "Horário",
+              "value": "={{ $json.body.date_time }}",
+              "type": "string"
+            },
+            {
+              "id": "7b31d367-b881-4826-babe-cf71834b0b1c",
+              "name": "Mensagem  Respondida",
+              "value": "={{ $json.body.data.contextInfo.quotedMessage.conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "97602854-3d4e-4c13-9b46-b983d3d5f241",
+              "name": "Tipo Mensagem",
+              "value": "={{ $json.body.data.messageType }}",
+              "type": "string"
+            },
+            {
+              "id": "1019dbf2-37ab-4006-9e09-82ddd88959d5",
+              "name": "Duração Áudio",
+              "value": "={{ $json.body.data.message.audioMessage.seconds }}",
+              "type": "number"
+            },
+            {
+              "id": "21f019ff-79d2-4114-ad55-2c83a0eebee5",
+              "name": "Transcrição do Áudio",
+              "value": "={{ $json.body.data.message.speechToText }}",
+              "type": "string"
+            },
+            {
+              "id": "ef8243e3-4d04-4021-8fa7-f32139f37e8b",
+              "name": "Quem enviou",
+              "value": "={{ $json.body.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "125de97a-6c07-42c4-b578-8da9129db68c",
+              "name": "fromMe",
+              "value": "={{ $('Webhook').item.json.body.data.key.fromMe }}",
+              "type": "boolean"
+            },
+            {
+              "id": "08dad637-40a9-4601-9e82-f3b0db374980",
+              "name": "messageId",
+              "value": "={{ $json.body.data.key.id }}",
+              "type": "string"
+            },
+            {
+              "id": "0ad65147-c777-4fdc-b095-0406b9eb8c8d",
+              "name": "app.evo.serverUrl",
+              "value": "={{ $json.body.server_url }}",
+              "type": "string"
+            },
+            {
+              "id": "24971ce8-5f0f-4050-b385-df7f3b86f19c",
+              "name": "app.evo.apiKey",
+              "value": "={{ $('Webhook').item.json.body.apikey }}",
+              "type": "string"
+            },
+            {
+              "id": "ebf1f5d6-365e-4fe3-b177-55402d55bac4",
+              "name": "app.evo.instance",
+              "value": "={{ $('Webhook').item.json.body.instance }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        300,
+        340
+      ],
+      "id": "445aa676-ef86-4d13-88ba-fda38b119f61",
+      "name": "Organizar"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Organizar').item.json.app.evo.serverUrl }}/message/sendReaction/{{ $('Organizar').item.json.app.evo.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Organizar').item.json.app.evo.apiKey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"key\": {\n    \"remoteJid\": \"{{ $('Organizar').item.json['Quem enviou'] }}\",\n    \"fromMe\": {{ $('Organizar').item.json.fromMe }},\n    \"id\": \"{{ $('Organizar').item.json.messageId }}\"\n  },\n  \"reaction\": \"🧙🏼‍♂️\"\n}\n",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1840,
+        340
+      ],
+      "id": "aa9b7c6c-d846-4943-8b46-4657bbc50983",
+      "name": "Enviar \"🧙🏼‍♂️\"",
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {
+          "mimeType": "audio/mp3"
+        }
+      },
+      "id": "f0128f0b-5780-4d1e-97c6-2886b7a306b9",
+      "name": "Convert to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        820,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/audio/transcriptions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "model",
+              "value": "whisper-large-v3-turbo"
+            },
+            {
+              "name": "temperature",
+              "value": "0.5"
+            },
+            {
+              "name": "response_format",
+              "value": "json"
+            },
+            {
+              "name": "language",
+              "value": "pt"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a0be7f1b-7e0d-489a-9c48-45227da6d76c",
+      "name": "Transcreve audio - Groq",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://evolution.ricardolandim.com.br/chat/getBase64FromMediaMessage/ricardo",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "=d5c2e2eeb8c6d358db1f4223cdbf5c0e"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"message\": {\n        \"key\": {\n            \"id\":  \"{{ $('Webhook').item.json.body.data.key.id }}\"\n        }\n    },\n    \"convertToMp4\": true\n} ",
+        "options": {}
+      },
+      "id": "8db393bd-4487-428d-bd7a-5ccffe3affe9",
+      "name": "Captura áudio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "content": "```\n    ██╗   ██╗██████╗     ██████╗ \n    ██║   ██║╚════██╗   ██╔═████╗\n    ██║   ██║ █████╔╝   ██║██╔██║\n    ╚██╗ ██╔╝██╔═══╝    ████╔╝██║\n     ╚████╔╝ ███████╗██╗╚██████╔╝\n      ╚═══╝  ╚══════╝╚═╝ ╚═════╝ \n                                 \n```",
+        "width": 420,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        0
+      ],
+      "id": "1aad2d01-7c32-4582-be25-c38c967aacae",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        500
+      ],
+      "id": "ea2a1389-973b-49ea-a65f-987d18a943c2",
+      "name": "4o - mini",
+      "credentials": {
+        "openAiApi": {
+          "id": "b4auJTU9Z1864AOH",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3-70b-8192",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        500
+      ],
+      "id": "5e9b18e1-e769-484b-af76-f2bb893b3173",
+      "name": "llama",
+      "credentials": {
+        "groqApi": {
+          "id": "Asl2PTTcOO0X9N95",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "```\n    ███████╗███████╗██████╗  █████╗ ██████╗  █████╗ ██████╗  ██████╗ ██████╗ \n    ██╔════╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔═══██╗██╔══██╗\n    ███████╗█████╗  ██████╔╝███████║██████╔╝███████║██║  ██║██║   ██║██████╔╝\n    ╚════██║██╔══╝  ██╔═══╝ ██╔══██║██╔══██╗██╔══██║██║  ██║██║   ██║██╔══██╗\n    ███████║███████╗██║     ██║  ██║██║  ██║██║  ██║██████╔╝╚██████╔╝██║  ██║\n    ╚══════╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝\n                                                                             \n```",
+        "height": 520,
+        "width": 840
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        660
+      ],
+      "id": "1597f2c6-e711-4cfe-9ca7-e0fe4c246630",
+      "name": "Sticky Note4"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Organizar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fromMe": {
+      "main": [
+        [],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resumo": {
+      "main": [
+        [
+          {
+            "node": "Enviar \"🧙🏼‍♂️\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Organizar": {
+      "main": [
+        [
+          {
+            "node": "Captura áudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar \"🧙🏼‍♂️\"": {
+      "main": [
+        [
+          {
+            "node": "Enviar a Transcrição",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Transcreve audio - Groq",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcreve audio - Groq": {
+      "main": [
+        [
+          {
+            "node": "Resumo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Captura áudio": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "llama": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Resumo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "c815cd98-7e20-47a5-9364-43060616e43e",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2025-01-20T15:24:06.076Z",
+      "updatedAt": "2025-01-20T15:24:06.076Z",
+      "id": "Eicfvnyw0KgZUadX",
+      "name": "™"
+    },
+    {
+      "createdAt": "2025-01-20T15:24:06.093Z",
+      "updatedAt": "2025-01-20T15:24:06.093Z",
+      "id": "eLPLf5BLoLLHUBYG",
+      "name": "Transcrição"
+    }
+  ]
+}
