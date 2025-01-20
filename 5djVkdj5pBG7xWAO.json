@@ -1,0 +1,803 @@
+{
+  "createdAt": "2025-01-20T17:23:49.038Z",
+  "updatedAt": "2025-01-20T17:27:10.549Z",
+  "id": "5djVkdj5pBG7xWAO",
+  "name": "BACKUP - G.D",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "url": "={{ $('configuracoes').item.json.url_n8n }}/api/v1/workflows/{{ $('Gera lista dos workflow').item.json[\"id\"] }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "968ce653-6940-4221-ba0f-f173ef382c8e",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        260,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "kKHF6Vo7TBfr20kO",
+          "name": "n8n - http request"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "65177a7a-2245-4266-86e6-35e69e63e735",
+      "name": "START",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('configuracoes').item.json.url_n8n }}/api/v1/workflows",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "7a7230a2-c578-4972-a780-0b8640432105",
+      "name": "Obtém JSON workflows",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -300,
+        400
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "kKHF6Vo7TBfr20kO",
+          "name": "n8n - http request"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "f8205c8b-ce3d-4b2b-991a-31944fce27fa",
+      "name": "Gera lista dos workflow",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 2.2,
+      "position": [
+        40,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "dfbd115e-72f4-47b0-8c0f-14d170d4d2c9",
+      "name": "Associar Workflow com JSON",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "jsonToBinary",
+        "options": {}
+      },
+      "id": "b079ee9c-17ce-4a27-8f76-94f7adf17610",
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        740,
+        400
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "binaryData": true,
+        "name": "={{ $('Associar Workflow com JSON').item.json[\"name\"] }}.json",
+        "resolveData": true,
+        "parents": [
+          "={{ $('Pasta DataDia').item.json[\"id\"] }}"
+        ],
+        "options": {}
+      },
+      "id": "3447715b-88c7-4864-9e47-513ef054de13",
+      "name": "Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        920,
+        400
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "99PnvB4k0buIRyVT",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "npx n8n export:credentials --backup --decrypted --output=/home/node/n8n/backups/credentials/"
+      },
+      "id": "7e1a8f5c-fc5b-4f96-bddf-cba21ae58b2e",
+      "name": "Execute Command",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        180,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "/home/node/n8n/backups/credentials/*.json",
+        "options": {
+          "fileExtension": "json",
+          "fileName": "data",
+          "dataPropertyName": "data"
+        }
+      },
+      "id": "f6a65ddd-77fd-426d-a686-54a79a88608b",
+      "name": "Read/Write Files from Disk",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        360,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "465d9f28-15ed-4f9c-8d9a-1ef76891b8ac",
+      "name": "Move Binary Data1",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        580,
+        720
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "jsonToBinary",
+        "options": {
+          "fileName": "={{ $json.name }}"
+        }
+      },
+      "id": "2b28bb57-fdd4-4ac3-9cfd-79e0e9b504e4",
+      "name": "Move Binary Data2",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        760,
+        720
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Credentials",
+        "options": {
+          "parents": [
+            "={{ $('Pasta DataDia').item.json.id }}"
+          ]
+        }
+      },
+      "id": "8ada8512-34e1-482e-86ba-9c4f674b39f1",
+      "name": "Pasta Dia-Credential",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        0,
+        720
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "99PnvB4k0buIRyVT",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "binaryData": true,
+        "name": "={{ $('Move Binary Data1').item.json.name }}.json",
+        "resolveData": true,
+        "parents": [
+          "={{ $('Pasta Dia-Credential').item.json.id }}"
+        ],
+        "options": {}
+      },
+      "id": "50aafd5b-83ab-4f1c-bc77-5bf973e54bb7",
+      "name": "Google Drive1",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        920,
+        720
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "99PnvB4k0buIRyVT",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Puxa os Workflows do n8n:\n### Em formato JSON\n",
+        "height": 246,
+        "width": 342,
+        "color": 4
+      },
+      "id": "1b45ef8f-a8cd-4744-afbd-cbcd49e09bd1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bb4751eb-f830-413b-979c-f0cf9a93c0c2",
+              "name": "DataDia",
+              "value": "={{ $now.setLocale('pt-BR').toFormat('dd-MM-yyyy') }}",
+              "type": "string"
+            },
+            {
+              "id": "1aef72b3-7f81-47f3-adc7-d99406b0ffa5",
+              "name": "url_n8n",
+              "value": "https://n8nserver.ricardolandim.com.br",
+              "type": "string"
+            },
+            {
+              "id": "872585f0-bfa2-45b2-9adc-93afdd999679",
+              "name": "id_DriveFolder",
+              "value": "1lMoDh4izscOZjsOajMKaZ-zZvfUgrHum",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "143cd68b-bb74-4248-846d-a18f85c31ec6",
+      "name": "configuracoes",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -560,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# Disparo",
+        "height": 387.4073385589324,
+        "width": 273.3591515113962,
+        "color": 4
+      },
+      "id": "c018b647-ee8d-4d90-ae59-56e1f2166ec6",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Dados de Entrada",
+        "height": 252.1098102128638,
+        "width": 214.60317460317452,
+        "color": 3
+      },
+      "id": "2192bb0d-d4d8-4e78-b4c2-b1ca56cda50f",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -620,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Backups das Credentials\n### Faz upload no Drive",
+        "height": 278,
+        "width": 1184,
+        "color": 5
+      },
+      "id": "84f3c71a-43cb-42cd-a991-305e8b30e25d",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 19
+            }
+          ]
+        }
+      },
+      "id": "a94417d1-f8e0-4258-920a-58736983331f",
+      "name": "Todo dia",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -880,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Faz upload dos arquivos no Drive:\n### Em formato JSON\n",
+        "height": 278.81993008016883,
+        "width": 616.5002650559675,
+        "color": 5
+      },
+      "id": "4a532e7a-8a8f-4240-a24f-f7797d6cf9ed",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Backups dos Flows",
+        "height": 246,
+        "width": 462
+      },
+      "id": "6da2b157-813e-492e-b91e-b6bd00b5da39",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Criação de Pastas\n",
+        "height": 252,
+        "width": 255,
+        "color": 3
+      },
+      "id": "4dd594f2-8b1d-496f-901e-0d1ffe3730bf",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1240,
+        540
+      ],
+      "id": "de3f93c9-c439-4219-b656-54623ffd9ce4",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e890f228-5460-47c6-9841-ef13f0d17acf",
+              "name": "data",
+              "value": "={{ $json.createdTime }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        540
+      ],
+      "id": "3ac17801-da11-46a2-a149-2143b505b21a",
+      "name": "Data1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obter o campo 'data' do input\nconst inputData = $json.data; // Atualizado para o caminho correto\n\n// Verificar se o campo existe\nif (!inputData) {\n  return [{ error: \"Campo 'data' não encontrado ou inválido.\" }];\n}\n\n// Converter o 'data' em um objeto Date\nconst date = new Date(inputData);\n\n// Subtrair 3 horas para ajustar o fuso horário\ndate.setHours(date.getHours() - 3);\n\n// Formatar a data no formato \"YYYY-MM-DD HH:mm\"\nconst formattedDate = date.toISOString().slice(0, 16).replace('T', ' ');\n\n// Retornar a data formatada no formato esperado\nreturn [{ formattedDate }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1640,
+        540
+      ],
+      "id": "774438a9-765c-4fe9-b256-04b06f3759bf",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "content": "## Gerando relatório após backup finalizado\n## API: Evolution 2.2.0",
+        "height": 320,
+        "width": 880,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        420
+      ],
+      "id": "36fa53dd-3747-4f3d-a1f2-1b7fd962f487",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $json.DataDia }}",
+        "options": {
+          "parents": [
+            "={{ $json.id_DriveFolder }}"
+          ]
+        }
+      },
+      "id": "0b125273-10e1-4efe-bd72-ffddfc4269f9",
+      "name": "Pasta DataDia",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        -280,
+        720
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "99PnvB4k0buIRyVT",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "ricardo",
+        "remoteJid": "5598984832409@s.whatsapp.net",
+        "messageText": "=Relatório de Backup no Google Drive na pasta *Business*\n*Data*: {{ $json.formattedDate }}\n\nInformo que o procedimento de backup foi realizado hoje com sucesso. \nTodos os workflows foram incluídos e verificados:\n\n✅ Workflows (BUSQUE AI)\n✅ Credentials (BUSQUE AI)\n\n*Status*: Concluído *sem erros*",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        540
+      ],
+      "id": "d8d4500e-671f-4c45-aff9-4038b1fb9dc0",
+      "name": "Relatório de Backup ✅",
+      "credentials": {
+        "evolutionApi": {
+          "id": "Fgt70wh5ojQXEIkf",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "```\n  ░▒▓██████▓▒░░▒▓███████▓▒░░▒▓███████▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░ \n ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        \n ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒▒▓█▓▒░░▒▓█▓▒░        \n ░▒▓█▓▒▒▓███▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒▒▓█▓▒░░▒▓██████▓▒░   \n ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░ ░▒▓█▓▓█▓▒░ ░▒▓█▓▒░        \n ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░ ░▒▓█▓▓█▓▒░ ░▒▓█▓▒░        \n  ░▒▓██████▓▒░░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░  ░▒▓██▓▒░  ░▒▓████████▓▒░ \n                                                                         \n                                                                         \n```",
+        "height": 180,
+        "width": 780,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "680646a4-0041-472d-9061-d24345978977",
+      "name": "Sticky Note9"
+    }
+  ],
+  "connections": {
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Associar Workflow com JSON",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Obtém JSON workflows": {
+      "main": [
+        [
+          {
+            "node": "Gera lista dos workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gera lista dos workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Associar Workflow com JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Associar Workflow com JSON": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data1": {
+      "main": [
+        [
+          {
+            "node": "Move Binary Data2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move Binary Data2": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pasta Dia-Credential": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "START": {
+      "main": [
+        [
+          {
+            "node": "configuracoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "configuracoes": {
+      "main": [
+        [
+          {
+            "node": "Pasta DataDia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Todo dia": {
+      "main": [
+        [
+          {
+            "node": "configuracoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Relatório de Backup ✅",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pasta DataDia": {
+      "main": [
+        [
+          {
+            "node": "Obtém JSON workflows",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pasta Dia-Credential",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Todo dia": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "5c1db384-7fb5-427d-997c-70d27a7cf51c",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2025-01-20T17:24:06.880Z",
+      "updatedAt": "2025-01-20T17:24:06.880Z",
+      "id": "lEeVpK4efwpG5BJb",
+      "name": "TM"
+    },
+    {
+      "createdAt": "2025-01-20T15:45:04.949Z",
+      "updatedAt": "2025-01-20T15:45:04.949Z",
+      "id": "7s38kDT8oLd8AT7V",
+      "name": "Segurança"
+    },
+    {
+      "createdAt": "2025-01-20T17:24:06.881Z",
+      "updatedAt": "2025-01-20T17:24:06.881Z",
+      "id": "288CK2NMUjcq7rJw",
+      "name": "Backup"
+    }
+  ]
+}
