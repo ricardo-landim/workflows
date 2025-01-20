@@ -782,16 +782,16 @@
   "triggerCount": 1,
   "tags": [
     {
-      "createdAt": "2025-01-20T15:45:04.949Z",
-      "updatedAt": "2025-01-20T15:45:04.949Z",
-      "id": "7s38kDT8oLd8AT7V",
-      "name": "Segurança"
-    },
-    {
       "createdAt": "2025-01-20T17:24:06.880Z",
       "updatedAt": "2025-01-20T17:24:06.880Z",
       "id": "lEeVpK4efwpG5BJb",
       "name": "TM"
+    },
+    {
+      "createdAt": "2025-01-20T15:45:04.949Z",
+      "updatedAt": "2025-01-20T15:45:04.949Z",
+      "id": "7s38kDT8oLd8AT7V",
+      "name": "Segurança"
     },
     {
       "createdAt": "2025-01-20T17:24:06.881Z",
